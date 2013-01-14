@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<!-- prevent caching while this is in development -->
+<meta http-equiv="”Pragma”" content="”no-cache”">
+<meta http-equiv="”Expires”" content="”-1″">
+<meta http-equiv="”CACHE-CONTROL”" content="”NO-CACHE”">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script src="Scripts/jquery-1.8.2.min.js"></script>
+	<script src="Scripts/kendo/2012.3.1114/kendo.web.min.js"></script>
+	<link href="Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
+	<link href="Content/kendo/2012.3.1114/kendo.black.min.css" rel="stylesheet" />
+	<link href="Content/app.css" rel="stylesheet" />
+	<title>Integrity Tasks</title>
+</head>
+<body>
+	<div class="content">
+		<div id="app">
+			<div id="list">
+				<div id="filters"></div>
+				<div id="hierarchy"></div>
+			</div>
+			<div id="task">
+				<div id="descriptions">
+					<div id="descriptionsContainer">
+						<input id="taskEntryInput" type="text" placeholder="Enter a task title" />
+						<textarea id="taskLongDescription"></textarea>
+					</div>
+				</div>
+				<div id="properties"></div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	// Go ahead and set up the regions in splitters here to keep the workspace simple to understand
+	$(document).ready(function () {
+		$("#app").kendoSplitter({
+			orientation: "vertical",
+			panes: [
+				{ collapsible: false, resizable: false, size: "30%", scrollable: false },
+				{ collapsible: true, scrollable: false, size: "70%" }
+			]
+		});
+
+		$("#list").kendoSplitter({
+			orientation: "horizontal",
+			panes: [
+				{ collapsible: true, size: "220px", scrollable: false },
+				{ collapsible: false, scrollable: false }
+			]
+		});
+
+		// \/ What an incredible pain in the ass this resize method was. \/
+		// The point of this code is to make the elements inside the
+		// descriptions div have the correct size, filling up the 
+		// container.
+		// It's difficult because the kendo editor and splitter are shit
+		// (with regard to resizing).  You can't just do this with CSS.
+		var onResize = function (e) {
+
+			if ($(".k-editor").length == 0) {
+				$("#taskLongDescription").kendoEditor();
+			}
+
+			var $taskEntryInput = $("#taskEntryInput");
+
+			// this.resizing exists if the users drags a splitter
+			// if you don't use it when it exists, then the calculation
+			// will be wrong because the taskNameContainer width will be wrong
+			// I found this out by trial and error, and I didn't enjoy the
+			// experience.
+			//if (typeof this.resizing == "undefined") {
+			//	$taskEntryInput.width($taskNameContainer.width() - 8);
+			//} else {
+			//	var newWidth = this.resizing._resizable.position;
+			//	$taskEntryInput.width(newWidth - 8);
+			//}
+
+			$taskEntryInput.width("100%");
+
+			var $container = $("#descriptionsContainer");
+			var $editor = $(".k-editor");
+
+			$editor.width("100%");
+			$editor.height($container.height() - $taskEntryInput.height() - 12);
+		};
+		$("#task").kendoSplitter({
+			orientation: "horizontal",
+			panes: [
+				{ collapsible: false, scrollable: false },
+				{ collapsible: true, size: "220px", scrollable: false }
+			],
+			resize: onResize
+		});
+		onResize();
+		// Create a shell around the kendo methods so that they may be called
+		// from AMD modules.
+		$("#taskLongDescription")[0].textEditor = new function () {
+			var that = this;
+			var kendoEditor = $("#taskLongDescription").data("kendoEditor");
+			kendoEditor.bind("change", function (changeArgs) {
+				$(that).trigger("change", changeArgs);
+			});
+			this.getValue = function () {
+				return kendoEditor.value();
+			};
+			this.setValue = function (newValue) {
+				kendoEditor.value(newValue);
+			};
+		};
+
+	});
+
+</script>
+<script data-main="Scripts/main" src="Scripts/require.js"></script>
+</html>

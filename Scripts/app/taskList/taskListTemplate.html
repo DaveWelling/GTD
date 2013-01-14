@@ -1,0 +1,11 @@
+﻿<div class="taskTitle">Tasks</div><div class="taskAdd"><a href="#"></a></div>
+ <ul>
+ {{#each tasks}}
+	 <li data-taskId="{{id}}">
+		 <a href="#/task/{{id}}" class="taskTitle">{{title}}</a>
+		 <div >
+			 <a class="taskAdd" href="#/addTo/{{id}}"></a>
+		 </div>
+	 </li>
+ {{/each}}
+ </ul>
