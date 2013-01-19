@@ -45,10 +45,10 @@ li {
 
 .taskAdd	{
 	display: block; 
-	background: url("/Images/Add.png");
+	background: url("../Images/Add.png");
 
 }
 
 .taskAdd:hover {
-	background: url("/Images/Add.png") 0px -20px no-repeat;
+	background: url("../Images/Add.png") 0px -20px no-repeat;
 }
