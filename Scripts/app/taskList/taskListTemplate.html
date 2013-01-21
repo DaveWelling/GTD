@@ -1,5 +1,5 @@
-﻿<div class="taskTitle">Tasks</div><div class="taskAdd"><a href="#"></a></div>
- <ul>
+﻿<div id="rootTaskNodeDescription" class="taskTitle">Tasks</div><a class="taskAdd" id="rootTaskNode" href="#/addTo/root"></a>
+ <ul id="rootTaskList">
  {{#each tasks}}
 	 <li data-taskId="{{id}}">
 		 <a href="#/task/{{id}}" class="taskTitle">{{title}}</a>
