@@ -5,10 +5,13 @@
 		defaults: {
 			title: '',
 			description: '',
-			state: 'new'
+			children: []
 		},
 		initialize: function() {
 			this.set("id", utilities.Guid());
+			// Couldn't figure out why, but previous children where being
+			// cloned into attribute.
+			this.set("children", []); 
 		}
 	});
 	return task;

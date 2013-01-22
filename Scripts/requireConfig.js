@@ -4,9 +4,8 @@
 		jquery: 'jquery-1.8.2.min',
 		handlebars: 'Handlebars',
 		underscore: 'underscore',
-		backbone: 'backbone',
+		backbone: 'backbone.min',
 		controller: 'app/taskList/taskListController',
-		marionette: 'backbone.marionette',
 		kendo: 'kendo/2012.3.1114/kendo.web.min'
 	},
 	shim: {
@@ -21,10 +20,6 @@
 		hbs: {
 			exports: 'hbs',
 			deps: ['handlebars', 'hbs/underscore']
-		},
-		marionette: {
-			exports: 'marionette',
-			marionette: ['underscore', 'backbone']
 		},
 		kendo: {
 			exports: 'kendo',

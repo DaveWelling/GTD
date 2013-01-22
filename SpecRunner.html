@@ -16,9 +16,9 @@
 
 <body>
 	<script type="text/javascript">
-		require(['app/vent',
-				'appTests/vent.test',
-				'appTests/collections/tasks.test'], function () {
+		require(['appTests/eventSink.test',
+				'appTests/collections/tasks.test',
+				'appTests/models/task.test'], function () {
 			jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
 			jasmine.getEnv().execute();
 		});
