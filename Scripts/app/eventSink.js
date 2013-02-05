@@ -2,6 +2,6 @@
 /// <reference path="../underscore.js"/>
 /// <reference path="../backbone.min.js"/>
 
-define(['underscore','backbone'], function () {
+define(['backbone'], function () {
 	return _.clone(Backbone.Events);
 })

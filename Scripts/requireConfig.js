@@ -5,7 +5,6 @@
 		handlebars: 'Handlebars',
 		underscore: 'underscore',
 		backbone: 'backbone.min',
-		controller: 'app/taskList/taskListController',
 		kendo: 'kendo/2012.3.1114/kendo.web.min'
 	},
 	shim: {

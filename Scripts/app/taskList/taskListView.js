@@ -1,7 +1,6 @@
 ﻿/// <reference path="../../require.js"/>
-/// <reference path="../../backbone.js"/>
+/// <reference path="../../backbone.min.js"/>
 /// <reference path="../../jquery-1.8.2.js"/>
-/// <reference path="../../backbone.marionette.js"/>
 /// <reference path="../../underscore.js"/>
 define(['backbone', 'hbs!app/taskList/taskListTemplate', 'underscore'], function (backbone, taskListTemplate, _) {
 	var taskList = null;
