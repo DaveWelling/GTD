@@ -17,7 +17,7 @@ asyncTest("returns the same instance in multiple require calls", function () {
 		start();
 	});
 });
-
+ 
 asyncTest("does not fire when unbound", function() {
 	require(['app/eventSink'], function() {
 		var sink = require('app/eventSink');

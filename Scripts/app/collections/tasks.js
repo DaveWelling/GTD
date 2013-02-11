@@ -1,16 +1,15 @@
 ﻿/// <reference path="../../backbone.min.js"/>
 /// <reference path="../../jquery-1.8.2.min.js"/>
-define(['backbone', 'app/eventSink', 'app/models/task', 'backbone-localStorage']
-	, function (backbone, sink, taskType) {
+define(['underscore','backbone', 'app/eventSink', 'app/models/task', 'backbone-localStorage']
+	, function (_, backbone, sink, taskType) {
 		
 	var tasks = backbone.Collection.extend({
 		// Reference to this collection's model.
 		model: taskType,
 		initialize: function (models) {
-			var that = this;
-			that.root = that.create({ title: 'Tasks Root' });
-			sink.on('task:idSelected', that.idSelected, that);
-			sink.on('task:addToParent', that.addToParent, that);
+			this.root = this.create({title: 'Tasks Root' });
+			sink.on('task:idSelected', this.idSelected, this);
+			sink.on('task:addToParent', this.addToParent, this);
 		},
 		destroy: function() {
 			sink.off("task:idSelected", this.idSelected);
@@ -37,7 +36,7 @@ define(['backbone', 'app/eventSink', 'app/models/task', 'backbone-localStorage']
 			};
 			parentTask.get("children").push(newTask.id);
 		},
-		localStorage: new Store('integrity-tasks')
+		localStorage: new backbone.LocalStorage('integrity-tasks')
 	});
 	return tasks;
 });

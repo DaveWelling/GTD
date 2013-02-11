@@ -1,63 +1,35 @@
-﻿/// <reference path="../../require.js"/>
-/// <reference path="../../jasmine/jasmine.js"/>
-/// <reference path="../../app/Utilities.js"/>
+﻿/// <reference path="../qunit.js"/>
+/// <reference path="../testUtilities.js"/>
+/// <reference path="../../require.js"/>
 
-//if (typeof define !== 'function') {
-//	var define = require('amdefine')(module);
-//};
+module("Tasks Collection Tests", {
+	setup: function () {
+		stop();
+		var that = this;
+		require(['app/collections/tasks', 'app/eventSink', 'app/models/task'], function(tasksType, sink, taskType) {
+			that.tasksType = tasksType;
+			that.sink = sink;
+			that.tasksType = taskType;
+			that.tasks = new tasksType();
+			start();
+		});
+	},
+	teardown: function() {
+		this.tasks.destroy();
+	}
+});
 
-//define(['app/eventSink', 'app/models/task', 'app/collections/tasks']
-//	, function (sink, taskType, tasksType) {
-describe("Tasks Collection Tests", function () {
-	var tasks;
-	var sink;
-	var tasksType;
-	var taskType;
-	beforeEach(function() {
-		tasksType = require('app/collections/tasks');
-		tasks = new tasksType();
-		sink = require('app/eventSink');
-		taskType = require('app/models/task');
-	});
-	afterEach(function() {
-		tasks.destroy();
-	});
-	it("on task:addToParent event - where parent does not exist - exception", function () {
-		expect( function() {
-			sink.trigger("task:addToParent", 'does not exist');
-		}).toThrow();
-	});
-	it("on destruction - removes event bindings", function () {
-		expect(tasks.length).toEqual(1);
-		tasks.destroy();
-		sink.trigger("task:addToParent", "root");
-		expect(tasks.length).toEqual(1);
-	});
-	it("during construction - creates a root task", function () {
-		expect(tasks.root).toBeDefined();
-		expect(tasks.length).toEqual(1);
-	});
-	it("on task:addToParent event - adds a new task to collection", function () {
-		expect(tasks.length).toEqual(1);
-		sink.trigger('app/taskList/taskListView');
-		expect(tasks.length).toEqual(2);
-	});
-	it("on task:addToParent event - adds a new task Id to parent's child collection", function () {
-		var parentTask = new taskType();
-		tasks.add(parentTask);
-		sink.trigger("task:addToParent", parentTask.id);
-		expect(parentTask.get("children").length).toEqual(1);
-	});
-	it("on task:addToParent event - with 'root' parent - adds new task id to root", function () {
-		var parentTask = tasks.root;
+test("on task:addToParent event - where parent does not exist - exception", function () {
+	var that = this;
+	testUtilities.expectException(function() {
+		that.sink.trigger("task:addToParent", 'does not exist');
+	}, "No task for parent ID");
+	
+});
 
-		var rootChildren = parentTask.get("children");
-		var expectedLength = rootChildren.length + 1;
-
-		sink.trigger("task:addToParent", 'root');
-		expect(parentTask.get("children").length).toEqual(expectedLength);
-	});
-	it("on task:addToParent event - triggers task:created event", function () {
-		// TODO : Code reaction tests to this event in various other objects
-	});
+test("on destruction - removes event bindings", function() {
+	equal(this.tasks.length, 1);
+	this.tasks.destroy();
+	this.sink.trigger("task:addToParent", "root");
+	equal(this.tasks.length, 1);
 });
