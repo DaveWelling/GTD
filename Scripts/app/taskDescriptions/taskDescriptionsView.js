@@ -22,7 +22,7 @@ define(['jquery','backbone', 'underscore'], function ($, backbone, _) {
 			editor.setValue(this.model.get("description"));
 		},
 		//events: {
-		//	'click li': 'raiseTaskSelected',
+		//	'click li': 'raiseTaskSelected',	
 		//},
 		taskSelected: function (task) {
 			this.model = task;

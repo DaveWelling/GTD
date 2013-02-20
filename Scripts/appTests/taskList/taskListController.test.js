@@ -1,5 +1,4 @@
-﻿/// <reference path="../../underscore.js"/>
-/// <reference path="../qunit.js"/>
+﻿/// <reference path="../qunit.js"/>
 /// <reference path="../../require.js"/>
 /// <reference path="../sinon-1.4.2.js"/>
 /// <reference path="../sinon-qunit-1.0.0.js"/>
@@ -7,44 +6,48 @@
 
 module("Task List Controller Tests.", {
 	setup: function () {
-		QUnit.config.testTimeout = 3000;
 		var that = this;
+		this.asyncShell = function (numberAssertionsExpected, testFunction) {
+			expect(numberAssertionsExpected);
+			stop(2000);
+			this.ctxt(['app/taskList/taskListController', 'app/eventSink']
+				, function (controllerType, sink) {
+				var controller = new controllerType();
+				try {
+					testFunction = _.bind(testFunction, that);
+					testFunction(controller, sink);
+					controller.destroy();
+				} catch (e) {
+					controller.destroy();
+					throw e;
+				}
+				start();
+			});
+		};
 		this.view = {
-			render: sinon.stub()
+			render: sinon.stub(),
+			taskAddedToParent: sinon.stub()
 		};
 		this.stubs = {
 			'app/taskList/taskListView': function () {
 				return that.view;
 			}
 		};
-		this.ctxt = new createContext(this.stubs);
+		this.ctxt = new CreateContext(this.stubs);
 	}
 });
 
 test("start viewTypeExists renderCalled", function () {
-	expect(1);
-	stop();
-	var that = this;
-	this.ctxt(['app/taskList/taskListController'], function (controllerType) {
-		var controller = new controllerType();
+	this.asyncShell(1, function (controller, sink) {
 		controller.start();
-		ok(that.view.render.calledOnce, "render was called once on the task list view");
-		controller.destroy();
-		start();
+		ok(this.view.render.calledOnce, "render was called once on the task list view");
 	});
 });
 
-
-asyncTest("task:addToParent event triggers render", function () {
-	expect(1);
-	var that = this;
-	this.ctxt(['app/eventSink', 'app/taskList/taskListController']
-		, function (sink, controllerType) {
-			var controller = new controllerType();
-			controller.start();
-			sink.trigger("task:addToParent", "root");
-			ok(that.view.render.calledTwice, "render should be called in the start method and the addToParent event.");
-			controller.destroy();
-			start();
+test("tasks:taskAddedToParent validTaskAdded taskAddedToParent called", function () {
+	this.asyncShell(1, function (controller, sink) {
+		controller.start();
+		sink.trigger("tasks:taskAddedToParent");
+		ok(this.view.taskAddedToParent.calledOnce, "tasks:taskAddedToParent should trigger view.taskAddedToParent");
 	});
 });

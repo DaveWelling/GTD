@@ -7,7 +7,6 @@ define(['underscore','backbone', 'app/eventSink', 'app/models/task', 'backbone-l
 		// Reference to this collection's model.
 		model: taskType,
 		initialize: function (models) {
-			this.root = this.create({title: 'Tasks Root' });
 			sink.on('task:idSelected', this.idSelected, this);
 			sink.on('task:addToParent', this.addToParent, this);
 		},
@@ -21,13 +20,9 @@ define(['underscore','backbone', 'app/eventSink', 'app/models/task', 'backbone-l
 			sink.trigger("task:selected", task);
 		},
 		addToParent: function(parentTaskId) {
-			var newTask = this.create();
+			var newTask = this.create({title: 'new task'});
 			var parentTask;
-			if (parentTaskId === 'root') {
-				parentTask = this.root;
-			} else {
-				parentTask = this.get(parentTaskId);
-			}
+			parentTask = this.get(parentTaskId);
 			if ($.isEmptyObject(parentTask)){
 				throw {
 					error: "No parent task",
@@ -35,6 +30,7 @@ define(['underscore','backbone', 'app/eventSink', 'app/models/task', 'backbone-l
 				};
 			};
 			parentTask.get("children").push(newTask.id);
+			sink.trigger("tasks:taskAddedToParent", newTask, parentTask);
 		},
 		localStorage: new backbone.LocalStorage('integrity-tasks')
 	});

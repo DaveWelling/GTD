@@ -3,16 +3,18 @@
 
 define(['app/collections/tasks', 'app/taskList/taskListView', 'app/eventSink']
 	, function (tasksType, taskListViewType, sink) {
-	this.controller = function (tasks) {
-		this.start = function() {
-			var taskList = new taskListViewType({ collection: tasks});
-			taskList.render();
-			sink.on('task:selected', taskList.taskSelected, taskList);
-			sink.on('task:addToParent', taskList.render, taskList);
+		this.controller = function (tasks) {
+			var taskList;
+			this.start = function () {
+				taskList = new taskListViewType({ collection: tasks });
+				taskList.render();
+				sink.on('task:selected', taskList.taskSelected, taskList);
+				sink.on('tasks:taskAddedToParent', taskList.taskAddedToParent, this);
+			};
+			this.destroy = function () {
+				sink.off('task:selected');
+				sink.off('tasks:taskAddedToParent', taskList.taskAddedToParent);
+			};
 		};
-		this.destroy = function() {
-			sink.off('task:selected');
-		};
-	};
-	return controller;
-});
+		return controller;
+	});

@@ -3,7 +3,7 @@
 
 
 // http://stackoverflow.com/questions/11439540/how-can-i-mock-dependencies-for-unit-testing-in-requirejs
-function createContext(stubs) {
+function CreateContext(stubs) {
 
 	QUnit.config.autostart = false;
 	var map = {};
@@ -43,6 +43,22 @@ function createContext(stubs) {
 			}
 		},
 		deps: ['jquery'],
+		hbs: {
+			disableI18n: true,        // This disables the i18n helper and
+			// doesn't require the json i18n files (e.g. en_us.json)
+			// (false by default)
+
+			disableHelpers: true,     // When true, won't look for and try to automatically load
+			// helpers (false by default)
+
+			helperPathCallback:       // Callback to determine the path to look for helpers
+				function (name) {       // ('/template/helpers/'+name by default)
+					return 'cs!' + name;
+				},
+
+			templateExtension: "html" // Set the extension automatically appended to templates
+			// ('hbs' by default)
+		},
 		context: Math.floor(Math.random() * 1000000),
 		map: {
 			"*": map

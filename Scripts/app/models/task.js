@@ -4,18 +4,17 @@ define(['backbone', 'app/utilities'], function (backbone, appUtilities) {
 		// Default attributes for the todo
 		// and ensure that each todo created has `title` and `completed` keys.
 		defaults: {
-			title: '',
+			title: 'new task',
 			description: '',
 			children: []
 		},
-		initialize: function() {
-			this.set("id", appUtilities.CreateGuid());
-			// Couldn't figure out why, but previous children where being
-			// cloned into attribute.
-			this.set("children", []); 
-		},
-		destroy: function() {
-			// No events to unhook yet.
+		initialize: function () {
+			if (this.get("id") == null) {
+				this.set("id", appUtilities.CreateGuid());
+			}
+			if (this.get("children") == null) {
+				this.set("children", []);
+			}
 		}
 	});
 	return task;
