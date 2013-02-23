@@ -9,7 +9,7 @@ define(['app/collections/tasks', 'app/taskList/taskListView', 'app/eventSink']
 				taskList = new taskListViewType({ collection: tasks });
 				taskList.render();
 				sink.on('task:selected', taskList.taskSelected, taskList);
-				sink.on('tasks:taskAddedToParent', taskList.taskAddedToParent, this);
+				sink.on('tasks:taskAddedToParent', taskList.taskAddedToParent, taskList);
 			};
 			this.destroy = function () {
 				sink.off('task:selected');

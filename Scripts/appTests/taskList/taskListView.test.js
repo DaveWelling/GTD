@@ -6,6 +6,7 @@
 /// <reference path="../../jquery-1.8.2.js"/>
 /// <reference path="../../backbone.min.js"/>
 /// <reference path="../../app/constants.js"/>
+/// <reference path="../amdQunit.js"/>
 
 module("Task List View Tests", {
 	setup: function () {
@@ -13,12 +14,12 @@ module("Task List View Tests", {
 		this.asyncShell = function(numberAssertionsExpected, testFunction) {
 			expect(numberAssertionsExpected);
 			stop(2000);
-			this.ctxt(['app/taskList/taskListView', 'app/collections/tasks'], function(viewType, tasksType) {
+			this.ctxt(['app/taskList/taskListView', 'app/collections/tasks', 'app/eventSink'], function(viewType, tasksType, sink) {
 				var hierarchyCollection = that.getHierarchyCollection(tasksType);
 				var view = new viewType({ collection: hierarchyCollection });
 				try {
 					testFunction = _.bind(testFunction, that);
-					testFunction(view, hierarchyCollection);
+					testFunction(view, hierarchyCollection, sink);
 					hierarchyCollection.destroy();
 				} catch(e) {
 					hierarchyCollection.destroy();
@@ -43,17 +44,18 @@ module("Task List View Tests", {
 			'hbs': that.template
 		};
 		this.ctxt = new CreateContext(this.stubs);
+		
 		this.generateTwoTierHierarchy = function () {
 			var hierarchyView = document.createElement("div");
 			hierarchyView.id = "hierarchy";
-			var root = document.createElement("div");
-			root.id = AppConstants.RootId;
-			root.setAttribute("data-taskId", root.id);
-			$(hierarchyView).append(root);
-			var parent = document.createElement("div");
-			parent.id = "2";
-			parent.setAttribute("data-taskId", parent.id);
-			$(root).append(parent);
+			this.hierarchyRoot = document.createElement("div");
+			this.hierarchyRoot.id = AppConstants.RootId;
+			this.hierarchyRoot.setAttribute("data-taskId", this.hierarchyRoot.id);
+			$(hierarchyView).append(this.hierarchyRoot);
+			this.firstParent = document.createElement("div");
+			this.firstParent.id = "2";
+			this.firstParent.setAttribute("data-taskId", this.firstParent.id);
+			$(this.hierarchyRoot).append(this.firstParent);
 			return hierarchyView;
 		};
 		this.getHierarchyCollection = function (tasksType) {
@@ -122,3 +124,68 @@ test("taskAddedToParent validTaskAndParentTask newChildNodeAppendedToParentNode"
 	});
 });
 
+test("selectedTask viewContainsSelectedTask selectedTaskReturned", function () {
+	this.asyncShell(1, function (view, tasks) {
+		var hierarchyView = this.generateTwoTierHierarchy();
+		view.setElement(hierarchyView);
+		$(this.hierarchyRoot).addClass('selectedTask');
+		equal(view.getSelectedTask(), this.hierarchyRoot);
+	});
+});
+
+test("selectedTask noSelectedTask nullReturned", function () {
+	this.asyncShell(1, function (view, tasks) {
+		var hierarchyView = this.generateTwoTierHierarchy();
+		view.setElement(hierarchyView);
+		equal(view.getSelectedTask(), null);
+	});
+});
+
+
+test("taskSelected previousSelectedTaskExists previousSelectedClassNoLongerSelected", function () {
+	this.asyncShell(1, function (view, tasks) {
+		var hierarchyView = this.generateTwoTierHierarchy();
+		view.setElement(hierarchyView);
+		$(this.hierarchyRoot).addClass('selectedTask');
+		view.taskSelected(this.firstParent);
+		ok(!$(this.hierarchyRoot).hasClass('selectedTask'));
+	});
+});
+
+
+test("taskSelected previousSelectedTaskExists newTaskSelected", function () {
+	this.asyncShell(1, function (view, tasks) {
+		var hierarchyView = this.generateTwoTierHierarchy();
+		view.setElement(hierarchyView);
+		$(this.hierarchyRoot).addClass('selectedTask');
+		view.taskSelected(this.firstParent);
+		ok($(this.firstParent).hasClass('selectedTask'));
+	});
+});
+
+test("addTaskToParent raisedByRootChild raises Task:AddToParent with root Id", function () {
+	this.asyncShell(1, function (view, tasks, sink) {
+		this.generateTwoTierHierarchy();
+		var fakeEventArgs = {
+			target: this.hierarchyRoot.children[0]
+		};
+		sink.on("task:addToParent", function (parentTaskId) {
+			equal(parentTaskId, AppConstants.RootId);
+		});
+		view.addTaskToParent(fakeEventArgs);
+	});
+});
+
+amdTest("taskTitleChanged | valid task given | corresponding hierarchy element updated",
+	1,
+	['app/taskList/taskListView', 'app/models/task'],
+	function (viewType, taskType) {
+		var testCollection = this.getHierarchyCollection();
+		var view = new viewType(testCollection);
+		var task = testCollection.models[1];
+		task.set
+		var hierarchyView = this.generateTwoTierHierarchy();
+		view.setElement(hierarchyView);
+		
+	}
+);

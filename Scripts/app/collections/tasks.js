@@ -17,7 +17,9 @@ define(['underscore','backbone', 'app/eventSink', 'app/models/task', 'backbone-l
 		},
 		idSelected:function (taskId) {
 			var task = this.get(taskId);
-			sink.trigger("task:selected", task);
+			if (typeof task != 'undefined') {
+				sink.trigger("task:selected", task);
+			}
 		},
 		addToParent: function(parentTaskId) {
 			var newTask = this.create({title: 'new task'});
@@ -31,6 +33,7 @@ define(['underscore','backbone', 'app/eventSink', 'app/models/task', 'backbone-l
 			};
 			parentTask.get("children").push(newTask.id);
 			sink.trigger("tasks:taskAddedToParent", newTask, parentTask);
+			sink.trigger("task:selected", newTask);
 		},
 		localStorage: new backbone.LocalStorage('integrity-tasks')
 	});

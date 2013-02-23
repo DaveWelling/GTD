@@ -5,18 +5,13 @@
 define(['app/eventSink'], function (sink) {
 	var workspace = Backbone.Router.extend({
 		routes: {
-			"task/:taskId": "gotoTask",    
-			"addTo/:parentTaskId": "addTaskToParent"
+			"task/:taskId": "gotoTask"
 		},
 
 
 		gotoTask: function (taskId) {
 			console.log("gotoTask :in " + taskId);
 			sink.trigger("task:idSelected", taskId);
-		},
-		addTaskToParent: function (parentTaskId) {
-			console.log("addToTask :in " + parentTaskId);
-			sink.trigger("task:addToParent", parentTaskId);
 		}
 	});
 	return workspace;

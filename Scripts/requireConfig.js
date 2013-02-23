@@ -1,4 +1,4 @@
-﻿var require = {
+﻿var myAppHoldRequireConfig = require = {
 	baseUrl: 'Scripts',
 	paths: {
 		jquery: 'jquery-1.8.2.min',

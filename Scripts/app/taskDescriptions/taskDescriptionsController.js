@@ -7,10 +7,10 @@ define(['app/collections/tasks', 'app/taskDescriptions/taskDescriptionsView', 'a
 			var taskDescriptionsView;
 			this.start = function () {
 				taskDescriptionsView = new taskDescriptionsViewType();
-				sink.on('task:idSelected', taskDescriptionsView.taskSelected, taskDescriptionsView);
+				sink.on('task:selected', taskDescriptionsView.taskSelected, taskDescriptionsView);
 			};
 			this.destroy = function () {
-				sink.off('task:idSelected', taskDescriptionsView.taskSelected);
+				sink.off('task:selected', taskDescriptionsView.taskSelected);
 			};
 		};
 		return controller;

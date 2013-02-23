@@ -6,7 +6,6 @@
 define(['backbone', 'hbs!app/taskList/taskListTemplate', 'underscore', 'app/eventSink', 'hbs!app/taskList/taskNodeTemplate', 'app/viewUtilities']
 	, function (backbone, taskListTemplate, _, sink, taskNodeTemplate, viewUtilities) {
 		var taskList = null;
-		var selectedItem = null;
 
 		var findElementWithTaskId = function ($unorderedList, taskId) {
 			var $listElements = $unorderedList.children;
@@ -34,6 +33,9 @@ define(['backbone', 'hbs!app/taskList/taskListTemplate', 'underscore', 'app/even
 
 		taskList = backbone.View.extend({
 			el: "#hierarchy",
+			events: {
+				"click .taskAdd" : "addTaskToParent"
+			},
 			render: function (parentTask) {
 				var childrenIds;
 				var children;
@@ -66,14 +68,30 @@ define(['backbone', 'hbs!app/taskList/taskListTemplate', 'underscore', 'app/even
 					this.render(nextParentTask);
 				}, this);
 			},
+			addTaskToParent: function (args) {
+				var parentNode = args.target.parentNode;
+				var parentTaskId = parentNode.getAttribute('data-taskId');
+				console.log("addToTask :in " + parentTaskId);
+				sink.trigger("task:addToParent", parentTaskId);
+			},
+			getSelectedTask: function () {
+				var foundTask = null;
+				if (typeof this.$el != 'undefined') {
+					foundTask = this.$el.find(".selectedTask");
+					if (foundTask.length > 0) {
+						return _.first(foundTask);
+					}
+				}
+				return null;
+			},
 			taskSelected: function (task) {
-				var $unorderedList = this.$el.children('ul')[0];
-				var item = findElementWithTaskId($unorderedList, task.id);
+				var findString = "[data-taskId='" + task.id + "']";
+				var item = this.$el.find(findString);
+				var selectedItem = this.getSelectedTask();
 				if (selectedItem != null) {
 					$(selectedItem).removeClass("selectedTask");
 				}
 				$(item).addClass("selectedTask");
-				selectedItem = item;
 			},
 			taskAddedToParent: function (newTask, parentTask) {
 				var parentNode = findParentNode(this, parentTask.id);
@@ -81,6 +99,9 @@ define(['backbone', 'hbs!app/taskList/taskListTemplate', 'underscore', 'app/even
 				var childNode = $(taskNodeTemplate(newTask.toJSON()));
 				$(listElement).append(childNode);
 			},
+			taskTitleChanged: function(task) {
+				
+			}
 		});
 
 		return taskList;

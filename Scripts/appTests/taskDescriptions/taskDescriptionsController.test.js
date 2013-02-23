@@ -20,6 +20,7 @@
 		};
 		this.view = {
 			render: sinon.stub(),
+			taskSelected: sinon.stub()
 		};
 		this.stubs = {
 			'app/taskDescriptions/taskDescriptionsView': function () {
@@ -30,14 +31,10 @@
 	}
 });
 
-test("taskSelected raised taskRendered", function() {
+test("task:selected raised view.taskSelected called", function () {
 	this.asyncShell(1, function (controller, sink) {
 		controller.start();
-		sink.trigger("task:idSelected", 1);
-		ok(this.view.render.calledOnce, "TaskDescriptions render should be called when a task is selected.");
+		sink.trigger("task:selected");
+		ok(this.view.taskSelected.calledOnce, "TaskDescriptions render should be called when a task is selected.");
 	});
-});
-
-test("taskSelected raised task title selected", function () {
-
 });

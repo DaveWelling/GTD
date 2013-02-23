@@ -25,7 +25,7 @@
 			<div id="task">
 				<div id="descriptions">
 					<div id="descriptionsContainer">
-						<input id="taskEntryInput" type="text" placeholder="Enter a task title" />
+						<input id="taskTitleInput" type="text" placeholder="Enter a task title" />
 						<textarea id="taskLongDescription"></textarea>
 					</div>
 				</div>
@@ -65,7 +65,7 @@
 					$("#taskLongDescription").kendoEditor();
 				}
 
-				var $taskEntryInput = $("#taskEntryInput");
+				var $taskTitleInput = $("#taskTitleInput");
 
 				// this.resizing exists if the users drags a splitter
 				// if you don't use it when it exists, then the calculation
@@ -79,13 +79,13 @@
 				//	$taskEntryInput.width(newWidth - 8);
 				//}
 
-				$taskEntryInput.width("100%");
+				$taskTitleInput.width("100%");
 
 				var $container = $("#descriptionsContainer");
 				var $editor = $(".k-editor");
 
 				$editor.width("100%");
-				$editor.height($container.height() - $taskEntryInput.height() - 12);
+				$editor.height($container.height() - $taskTitleInput.height() - 12);
 			};
 			$("#task").kendoSplitter({
 				orientation: "horizontal",
@@ -103,12 +103,15 @@
 				var kendoEditor = $("#taskLongDescription").data("kendoEditor");
 				kendoEditor.bind("change", function (changeArgs) {
 					$(that).trigger("change", changeArgs);
-				});
+				}, this);
 				this.getValue = function () {
 					return kendoEditor.value();
 				};
 				this.setValue = function (newValue) {
 					kendoEditor.value(newValue);
+				};
+				this.bind = function(eventName, callBack, context) {
+					kendoEditor.bind(eventName, callBack, context);
 				};
 			};
 
