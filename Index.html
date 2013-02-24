@@ -40,7 +40,7 @@
 			$("#app").kendoSplitter({
 				orientation: "vertical",
 				panes: [
-					{ collapsible: false, resizable: false, size: "30%", scrollable: false },
+					{ collapsible: false, resizable: true, size: "30%", scrollable: false },
 					{ collapsible: true, scrollable: false, size: "70%" }
 				]
 			});
@@ -117,6 +117,11 @@
 
 		});
 
+	</script>
+	<script id="node-template" type="text/template">
+		<a href="#/task/{{id}}" class="taskTitle"><%= nodeName %></a>
+		<div class="taskAdd"></div>
+		<ul></ul>
 	</script>
 	<script src="Scripts/requireConfig.js" type="text/javascript"></script>
 	<script data-main="main" src="Scripts/require.js"></script>

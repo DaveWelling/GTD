@@ -12,6 +12,9 @@ body {
 	height: 98%;
 }
 
+#hierarchy {
+	overflow:auto;
+}
 #descriptionsContainer {
 	min-height: 100%;
 	height: auto !important;

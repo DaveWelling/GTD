@@ -1,0 +1,19 @@
+﻿body {
+}
+.taskDetails {
+	background-color: #eee
+}
+
+.plusimageapply{
+ list-style-image:url(../Images/plus.png);
+ cursor:pointer;
+ }
+.minusimageapply{
+ list-style-image:url(../Images/minus.png);
+ cursor:pointer;
+ }
+
+.selectedimage{
+ list-style-image:url(../Images/selected.png);
+ cursor:pointer;
+ }

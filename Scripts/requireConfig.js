@@ -5,7 +5,8 @@
 		handlebars: 'Handlebars',
 		underscore: 'underscore',
 		backbone: 'backbone.min',
-		kendo: 'kendo/2012.3.1114/kendo.web.min'
+		kendo: 'kendo/2012.3.1114/kendo.web.min',
+		marionette: 'backbone.marionette.min'
 	},
 	shim: {
 		'backbone-localStorage': ['backbone'],
@@ -23,6 +24,9 @@
 		kendo: {
 			exports: 'kendo',
 			deps: ['jquery']
+		},
+		marionette: {
+			deps: ['backbone','underscore', 'jquery']
 		}
 	},
 	deps: ['jquery'],
