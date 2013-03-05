@@ -7,10 +7,10 @@ testUtilities.expectException = function (action, expectedMessageFragment) {
 	}
 	catch (err) {
 		if (typeof err == "string") {
-			ok(err.indexOf(expectedMessageFragment) != -1, "Wrong exception thrown: " + err);
+			ok(err.indexOf(expectedMessageFragment) != -1, "Error thrown: <" + err + "> should include expected message fragment: <" + expectedMessageFragment + ">.");
 		}
 		else {
-			ok(err.message.indexOf(expectedMessageFragment) != -1, "Wrong exception thrown: " + err.message);
+			ok(err.message.indexOf(expectedMessageFragment) != -1, "Error thrown: <" + err.message + "> should include expected message fragment: <" + expectedMessageFragment + ">.");
 		}
 	};
 };

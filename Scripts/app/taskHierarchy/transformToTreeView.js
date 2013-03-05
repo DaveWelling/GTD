@@ -4,8 +4,8 @@
 		if (!hasChildren) {
 			$el.addClass('selectedimage');
 		} else {
-			$el.addClass('plusimageapply');
-			$el.children('ul').hide();
+			$el.addClass('minusimageapply');
+			//$el.children('ul').hide();
 			$el.click(function (event) {
 				if (this == event.target) {
 					if ($(this).is('.plusimageapply')) {

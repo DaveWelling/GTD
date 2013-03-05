@@ -68,13 +68,13 @@ define(['backbone', 'hbs!app/taskList/taskListTemplate', 'underscore', 'app/even
 					this.render(nextParentTask);
 				}, this);
 			},
-			addTaskToParent: function (args) {
+			addTaskToParentRequest: function (args) {
 				var parentNode = args.target.parentNode;
 				var parentTaskId = parentNode.getAttribute('data-taskId');
 				console.log("addToTask :in " + parentTaskId);
 				sink.trigger("task:addToParent", parentTaskId);
 			},
-			getSelectedTask: function () {
+			getSelectedTaskElement: function () {
 				var foundTask = null;
 				if (typeof this.$el != 'undefined') {
 					foundTask = this.$el.find(".selectedTask");
@@ -87,7 +87,7 @@ define(['backbone', 'hbs!app/taskList/taskListTemplate', 'underscore', 'app/even
 			taskSelected: function (task) {
 				var findString = "[data-taskId='" + task.id + "']";
 				var item = this.$el.find(findString);
-				var selectedItem = this.getSelectedTask();
+				var selectedItem = this.getSelectedTaskElement();
 				if (selectedItem != null) {
 					$(selectedItem).removeClass("selectedTask");
 				}

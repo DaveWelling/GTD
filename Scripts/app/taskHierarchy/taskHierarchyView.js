@@ -3,7 +3,6 @@
 		// The recursive tree view
 		var TreeView = Backbone.Marionette.CompositeView.extend({
 			template: "#node-template",
-
 			tagName: "li",
 			itemViewContainer: "ul",
 
@@ -11,7 +10,9 @@
 				// grab the child collection from the parent model
 				// so that we can render the collection as children
 				// of this parent node
-				this.collection = this.model.nodes;
+				var task = this.model;
+				var tasks = this.model.collection;
+				this.collection = tasks.getSubcollection(task.get("children"));
 			},
 
 			onRender: function () {
@@ -19,93 +20,46 @@
 					this.$("ul:first").remove();
 				}
 				transformToTreeView(this.$el);
-			}
-		});
-
-		// The tree's root: a simple collection view that renders 
-		// a recursive tree structure for each item in the collection
-		var TreeRoot = Backbone.Marionette.CollectionView.extend({
-			tagName: "ul",
-			itemView: TreeView
-		});
-
-
-
-		// ----------------------------------------------------------------
-		// Below this line is normal stuff... models, templates, data, etc.
-		// ----------------------------------------------------------------
-		var treeData = [
-		  {
-		  	nodeName: "top level 1",
-		  	nodes: [
-			  {
-			  	nodeName: "2nd level, item 1",
-			  	nodes: [
-				  { nodeName: "3rd level, item 1" },
-				  { nodeName: "3rd level, item 2" },
-				  { nodeName: "3rd level, item 3" }
-			  	]
-			  },
-			  {
-			  	nodeName: "2nd level, item 2",
-			  	nodes: [
-				  { nodeName: "3rd level, item 4" },
-				  {
-				  	nodeName: "3rd level, item 5",
-				  	nodes: [
-						{ nodeName: "4th level, item 1" },
-						{ nodeName: "4th level, item 2" },
-						{ nodeName: "4th level, item 3" }
-				  	]
-				  },
-				  { nodeName: "3rd level, item 6" }
-			  	]
-			  }
-		  	]
-		  },
-		  {
-		  	nodeName: "top level 2",
-		  	nodes: [
-			  {
-			  	nodeName: "2nd level, item 3",
-			  	nodes: [
-				  { nodeName: "3rd level, item 7" },
-				  { nodeName: "3rd level, item 8" },
-				  { nodeName: "3rd level, item 9" }
-			  	]
-			  },
-			  {
-			  	nodeName: "2nd level, item 4",
-			  	nodes: [
-				  { nodeName: "3rd level, item 10" },
-				  { nodeName: "3rd level, item 11" },
-				  { nodeName: "3rd level, item 12" }
-			  	]
-			  }
-		  	]
-		  }
-
-		];
-
-
-		var TreeNode = Backbone.Model.extend({
-			initialize: function () {
-				var nodes = this.get("nodes");
-				if (nodes) {
-					this.nodes = new TreeNodeCollection(nodes);
-					this.unset("nodes");
+				$("#hierarchy").html(this.$el);
+			},
+			events: {
+				"click .taskAdd": "addTaskToParentRequest"
+			},
+			addTaskToParentRequest: function (args) {
+				var parentNode = args.target.parentNode;
+				var parentTaskId = parentNode.getAttribute('data-taskId');
+				sink.trigger("task:addToParent", parentTaskId);
+			},
+			getSelectedTaskElement: function () {
+				var foundTask;
+				if (typeof this.$el != 'undefined') {
+					foundTask = this.$el.find(".selectedTask");
+					if (foundTask.length > 0) {
+						return _.first(foundTask);
+					}
 				}
+				return null;
+			},
+			taskSelected: function (task) {
+				var findString = "[data-taskId='" + task.id + "']";
+				var item = this.$el.find(findString);
+				var selectedItem = this.getSelectedTaskElement();
+				if (selectedItem != null) {
+					$(selectedItem).removeClass("selectedTask");
+				}
+				$(item).addClass("selectedTask");
+			},
+			taskAddedToParent: function (newTask, parentTask) {
+				//var parentNode = findParentNode(this, parentTask.id);
+				//var listElement = viewUtilities.getOrCreateListInElement(parentNode);
+				//var childNode = $(taskNodeTemplate(newTask.toJSON()));
+				//$(listElement).append(childNode);
+			},
+			taskTitleChanged: function (task) {
+
 			}
 		});
 
-		var TreeNodeCollection = Backbone.Collection.extend({
-			model: TreeNode
-		});
 
-		var tree = new TreeNodeCollection(treeData);
-		var treeView = new TreeRoot({
-			collection: tree
-		});
-
-		return treeView;
+		return TreeView;
 	});

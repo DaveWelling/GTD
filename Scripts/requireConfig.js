@@ -9,7 +9,7 @@
 		marionette: 'backbone.marionette.min'
 	},
 	shim: {
-		'backbone-localStorage': ['backbone'],
+		//'backbone-localStorage': ['backbone'],
 		underscore: {
 			exports: '_'
 		},

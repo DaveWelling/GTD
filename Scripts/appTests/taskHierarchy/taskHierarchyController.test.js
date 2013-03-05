@@ -4,13 +4,13 @@
 /// <reference path="../sinon-qunit-1.0.0.js"/>
 /// <reference path="../createContext.js"/>
 
-module("Task List Controller Tests.", {
+module("Task Hierarchy Controller Tests.", {
 	setup: function () {
 		var that = this;
 		this.asyncShell = function (numberAssertionsExpected, testFunction) {
 			expect(numberAssertionsExpected);
 			stop(2000);
-			this.ctxt(['app/taskList/taskListController', 'app/eventSink']
+			this.ctxt(['app/taskHierarchy/taskHierarchyController', 'app/eventSink']
 				, function (controllerType, sink) {
 				var controller = new controllerType();
 				try {
@@ -29,7 +29,7 @@ module("Task List Controller Tests.", {
 			taskAddedToParent: sinon.stub()
 		};
 		this.stubs = {
-			'app/taskList/taskListView': function () {
+			'app/taskHierarchy/taskHierarchyView': function () {
 				return that.view;
 			}
 		};

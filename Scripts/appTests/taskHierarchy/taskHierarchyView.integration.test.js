@@ -6,29 +6,11 @@
 /// <reference path="../../jquery-1.8.2.js"/>
 /// <reference path="../../backbone.min.js"/>
 /// <reference path="../../app/constants.js"/>
+/// <reference path="../amdQunit.js"/>
 
-module("Task List View Integration Tests", {
+module("Task Hierarchy View Integration Tests", {
 	setup: function () {
-		var that = this;
-		this.asyncShell = function(numberAssertionsExpected, testFunction) {
-			expect(numberAssertionsExpected);
-			stop(2000);
-			this.ctxt(['app/taskList/taskListView', 'app/collections/tasks'], function(viewType, tasksType) {
-				var hierarchyCollection = that.getHierarchyCollection(tasksType);
-				var view = new viewType({ collection: hierarchyCollection });
-				try {
-					testFunction = _.bind(testFunction, that);
-					testFunction(view, hierarchyCollection);
-					hierarchyCollection.destroy();
-				} catch(e) {
-					hierarchyCollection.destroy();
-					throw e;
-				}
-				start();
-			});
-		};
-		this.ctxt = new CreateContext({});
-		this.getHierarchyCollection = function (tasksType) {
+		this.getHierarchyCollectionRoot = function (tasksType) {
 			var tasks = new tasksType();
 			var firstGrandchild = tasks.create(
 				{
@@ -48,24 +30,30 @@ module("Task List View Integration Tests", {
 				title: 'root',
 				children: [firstChild.id]
 			});
-			return tasks;
+			return root;
 		};
+		
 	},
 	teardown: function () {
 		var hierarchy = $(document).find("#hierarchy");
 		if (hierarchy.length > 0) {
 			document.removeChild(hierarchy[0]);
 		}
-		localStorage.clear();
+		//localStorage.clear();
 	}
 });
 
-test("render givenHierarchyInCollection rendersWholeHierarchy", function () {
-	this.asyncShell(1, function (view, tasks) {
+
+amdTest("render givenHierarchyInCollection rendersWholeHierarchy",
+	1,
+	['app/taskHierarchy/taskHierarchyView', 'app/collections/tasks'],
+	function (ViewType, TasksType) {
+		var root = this.getHierarchyCollectionRoot(TasksType);
+		var view = new ViewType({ model: root });
 		var hierarchyContainer = $('<div id="hierarchy"> </div>');
 		view.setElement(hierarchyContainer);
 		view.render();
-		var treeNodes = $(hierarchyContainer).find('[data-taskId]');
+		var treeNodes = $(hierarchyContainer).find('.taskTitle');
 		equal(treeNodes.length, 3);
-	});
-});
+	}
+);

@@ -45,39 +45,39 @@ module("Task List View Tests", {
 		};
 		this.ctxt = new CreateContext(this.stubs);
 		
-		this.generateTwoTierHierarchy = function () {
-			var hierarchyView = document.createElement("div");
-			hierarchyView.id = "hierarchy";
-			this.hierarchyRoot = document.createElement("div");
-			this.hierarchyRoot.id = AppConstants.RootId;
-			this.hierarchyRoot.setAttribute("data-taskId", this.hierarchyRoot.id);
-			$(hierarchyView).append(this.hierarchyRoot);
-			this.firstParent = document.createElement("div");
-			this.firstParent.id = "2";
-			this.firstParent.setAttribute("data-taskId", this.firstParent.id);
-			$(this.hierarchyRoot).append(this.firstParent);
-			return hierarchyView;
-		};
+		//this.generateTwoTierHierarchy = function () {
+		//	var hierarchyView = document.createElement("div");
+		//	hierarchyView.id = "hierarchy";
+		//	this.hierarchyRoot = document.createElement("div");
+		//	this.hierarchyRoot.id = AppConstants.RootId;
+		//	this.hierarchyRoot.setAttribute("data-taskId", this.hierarchyRoot.id);
+		//	$(hierarchyView).append(this.hierarchyRoot);
+		//	this.firstParent = document.createElement("div");
+		//	this.firstParent.id = "2";
+		//	this.firstParent.setAttribute("data-taskId", this.firstParent.id);
+		//	$(this.hierarchyRoot).append(this.firstParent);
+		//	return hierarchyView;
+		//};
 		this.getHierarchyCollection = function (tasksType) {
 			var tasks = new tasksType();
-			var firstGrandchild = tasks.create(
+			var firstGrandchild = tasks.add(new tasks.model(
 				{
-					id: 3,
+					Id: 3,
 					title: 'firstGrandchild',
 					children: []		
-				});
-			var firstChild = tasks.create(
+				}));
+			var firstChild = tasks.add(new tasks.model(
 				{
-					id: 2,
+					Id: 2,
 					title: 'firstChild',
 					children: [firstGrandchild.id]
-				});
-			var root = tasks.create(
+				}));
+			var root = tasks.add(new tasks.model(
 			{
-				id: AppConstants.RootId,
+				Id: AppConstants.RootId,
 				title: 'root',
 				children: [firstChild.id]
-			});
+			}));
 			return tasks;
 		};
 	},
@@ -89,27 +89,43 @@ module("Task List View Tests", {
 		localStorage.clear();
 	}
 });
-test("verify shell works", function() {
-	this.asyncShell(3, function(view, tasks) {
-		ok(typeof view != 'undefined');
-		ok(typeof tasks != 'undefined');
-		equal(tasks.models.length, 3);
+
+test("idSelected triggers task:selected", function () {
+	this.asyncShell(1, function (tasks, sink) {
+		tasks.create({ id: AppConstants.RootId, title: "root" });
+		sink.on("task:selected", function (task) {
+			ok(true, "task:selected should fire when idSelected is called.");
+		});
+		tasks.idSelected(AppConstants.RootId);
 	});
 });
 
-test("Render NotPassedParent RendersRootCollection", function () {
-	this.asyncShell(2, function (view, tasks) {
-		// prevent recursive render calls by removing children
+test("idSelected idDoesNotExist task:selected not triggered", function () {
+	this.asyncShell(0, function (tasks, sink) {
+		sink.on("task:selected", function (task) {
+			ok(false, "task:selected should not fire when idSelected is called with a non-existent ID.");
+		});
+		tasks.idSelected('non existent id');
+	});
+});
+
+
+amdTest("Render NotPassedParent RendersRootCollection",
+	2,
+	['app/taskHierarchy/taskHierarchyView', 'app/collections/tasks'],
+	function(ViewType, TasksType) {
+		var view = new ViewType();
+		var tasks = new TasksType();
 		var rootTask = tasks.get(AppConstants.RootId);
-		rootTask.set("children",[]);
+		rootTask.set("children", []);
 		var elStub = document.createElement('div');
 		elStub.setAttribute("id", "hierarchy");
 		view.setElement(elStub);
 		view.render();
 		ok(this.template.loadCalled, "template constructor should be called");
-		ok($(elStub).find("[data-taskId='" + AppConstants.RootId + "']").length > 0,"root render should append to $el");
-	});
-});
+		ok($(elStub).find("[data-taskId='" + AppConstants.RootId + "']").length > 0, "root render should append to $el");
+	}
+);
 
 test("taskAddedToParent validTaskAndParentTask newChildNodeAppendedToParentNode", function () {
 	this.asyncShell(1, function (view, tasks) {
@@ -178,7 +194,7 @@ test("addTaskToParent raisedByRootChild raises Task:AddToParent with root Id", f
 
 amdTest("taskTitleChanged | valid task given | corresponding hierarchy element updated",
 	1,
-	['app/taskList/taskListView', 'app/models/task'],
+	['app/taskHierarchy/taskHierarchyView', 'app/models/task'],
 	function (viewType, taskType) {
 		var testCollection = this.getHierarchyCollection();
 		var view = new viewType(testCollection);
@@ -187,5 +203,23 @@ amdTest("taskTitleChanged | valid task given | corresponding hierarchy element u
 		var hierarchyView = this.generateTwoTierHierarchy();
 		view.setElement(hierarchyView);
 		
+	}
+);
+
+amdTest("model change event | new task added to children | new task renders",
+	1,
+	["app/taskHierarchy/taskHierarchyView", "app/models/task"],
+	function (viewType, taskType) {
+		stop();
+		var expectedId = 1;
+		var task = new taskType();
+		var view = new viewType({ model: task });
+		view.on("render", function() {
+			ok(true, "Expecting a render call when the children change on the view's task.");
+			start();
+		});
+		var children = task.get("children");
+		children.push(expectedId);
+		task.set("children", children);
 	}
 );

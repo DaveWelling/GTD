@@ -1,6 +1,7 @@
 ﻿/// <reference path="../utilities.js"/>
 define(['backbone', 'app/utilities'], function (backbone, appUtilities) {
 	var task = backbone.Model.extend({
+		idAttribute: "Id",
 		// Default attributes for the todo
 		// and ensure that each todo created has `title` and `completed` keys.
 		defaults: {
@@ -9,8 +10,8 @@ define(['backbone', 'app/utilities'], function (backbone, appUtilities) {
 			children: []
 		},
 		initialize: function () {
-			if (this.get("id") == null) {
-				this.set("id", appUtilities.CreateGuid());
+			if (this.get("Id") == null) {
+				this.set("Id", appUtilities.CreateGuid());
 			}
 			if (this.get("children") == null) {
 				this.set("children", []);
