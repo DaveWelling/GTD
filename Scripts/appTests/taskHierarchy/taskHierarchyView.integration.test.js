@@ -14,21 +14,21 @@ module("Task Hierarchy View Integration Tests", {
 			var tasks = new tasksType();
 			var firstGrandchild = tasks.create(
 				{
-					id: 3,
+					Id: 3,
 					title: 'firstGrandchild',
 					children: []		
 				});
 			var firstChild = tasks.create(
 				{
-					id: 2,
+					Id: 2,
 					title: 'firstChild',
-					children: [firstGrandchild.id]
+					children: [firstGrandchild.get("Id")]
 				});
 			var root = tasks.create(
 			{
-				id: AppConstants.RootId,
+				Id: AppConstants.RootId,
 				title: 'root',
-				children: [firstChild.id]
+				children: [firstChild.get("Id")]
 			});
 			return root;
 		};
@@ -49,8 +49,9 @@ amdTest("render givenHierarchyInCollection rendersWholeHierarchy",
 	['app/taskHierarchy/taskHierarchyView', 'app/collections/tasks'],
 	function (ViewType, TasksType) {
 		var root = this.getHierarchyCollectionRoot(TasksType);
+		ViewType.prototype.rootCollection = root.collection;
 		var view = new ViewType({ model: root });
-		var hierarchyContainer = $('<div id="hierarchy"> </div>');
+		var hierarchyContainer = $('<ul id="hierarchy"> </ul>');
 		view.setElement(hierarchyContainer);
 		view.render();
 		var treeNodes = $(hierarchyContainer).find('.taskTitle');

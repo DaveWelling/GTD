@@ -62,27 +62,6 @@ test("on destruction - removes event bindings", function () {
 	});
 });
 
-test("addToParent triggers tasks:taskAddedToParent", function () {
-	this.asyncShell(1, function (tasks, sink, taskType, tasksType) {
-		sink.on("tasks:taskAddedToParent", function (task, parentTask) {
-			equal(parentTask.get("title"), "parent task title");
-		}, this);
-		var testParentTask = tasks.create({ title: "parent task title" });
-		sink.trigger("task:addToParent", testParentTask.id);
-		
-	});
-});
-
-test("addToParent triggers task:selected", function () {
-	this.asyncShell(1, function (tasks, sink) {
-		tasks.create({ Id: AppConstants.RootId, title: "root" });
-		sink.on("task:selected", function (task) {
-			ok(true, "task:selected should fire when addToParent is called.");
-		});
-		tasks.addToParent(AppConstants.RootId);		
-	});
-});
-
 
 amdTest("getSubcollection | given valid ids | returns collection with tasks for ids",
 	4,
@@ -96,3 +75,27 @@ amdTest("getSubcollection | given valid ids | returns collection with tasks for 
 		ok(subCollection.some(function (task) { return task.id === 9; }), "should have id 9");
 	}
 );
+
+amdTest({
+	testDescription: "getSubcollection | children of original collection task changes | child of subCollection gets event",
+	numberExpectedAssertions: 2,
+	amdDependencies: ["app/collections/tasks"],
+	testFunction: function (tasksType) {
+		stop(1000);
+		var tasks = this.getTestTasks(tasksType);
+		var originalTask = tasks.get(4);
+		
+		var subCollection = tasks.getSubcollection([4, 5, 9]);
+		var copiedTask = subCollection.get(4);
+		copiedTask.on("change:children", function(args) {
+			ok(true, "Change event of copied task should fire when original task changes.in ");
+			start();
+		});
+		
+		var children = originalTask.get("children");
+		var copy = children.slice(0);
+		copy.push(99);
+		notEqual(copy, children);
+		originalTask.set("children", copy);
+	}
+});

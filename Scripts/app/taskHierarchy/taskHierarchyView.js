@@ -11,19 +11,24 @@
 				// so that we can render the collection as children
 				// of this parent node
 				var task = this.model;
-				var tasks = this.model.collection;
-				this.collection = tasks.getSubcollection(task.get("children"));
+				task.on("change:children", this.taskChildrenChanged, this);
+				task.on("change:title", this.taskTitleChanged, this);
+				this.collection = this.rootCollection.getSubcollection(task.get("children"));
 			},
-
+			taskChildrenChanged: function(eventArgs) {
+				var newTaskIds = _.difference(eventArgs.attributes.children, eventArgs._previousAttributes.children);
+				_.each(newTaskIds, function(newTaskId) {
+					var newTask = this.rootCollection.get(newTaskId);
+					this.collection.add(newTask);
+				}, this);
+			},
 			onRender: function () {
 				if (_.isUndefined(this.collection)) {
 					this.$("ul:first").remove();
 				}
 				transformToTreeView(this.$el);
-				$("#hierarchy").html(this.$el);
-			},
-			events: {
-				"click .taskAdd": "addTaskToParentRequest"
+				var plusButton = this.$el[0].children[0].children[1];
+				$(plusButton).on("click", this.addTaskToParentRequest);
 			},
 			addTaskToParentRequest: function (args) {
 				var parentNode = args.target.parentNode;
@@ -49,17 +54,13 @@
 				}
 				$(item).addClass("selectedTask");
 			},
-			taskAddedToParent: function (newTask, parentTask) {
-				//var parentNode = findParentNode(this, parentTask.id);
-				//var listElement = viewUtilities.getOrCreateListInElement(parentNode);
-				//var childNode = $(taskNodeTemplate(newTask.toJSON()));
-				//$(listElement).append(childNode);
-			},
 			taskTitleChanged: function (task) {
-
+				var findString = "[data-taskId='" + task.id + "']";
+				var $item = this.$el.find(findString);
+				$item[0].children[0].textContent = task.get("title");
 			}
 		});
-
+		TreeView.prototype.rootCollection = null;
 
 		return TreeView;
 	});

@@ -16,7 +16,8 @@ define(['backbone', 'app/utilities'], function (backbone, appUtilities) {
 			if (this.get("children") == null) {
 				this.set("children", []);
 			}
-		}
+		},
+		url: "http://localhost/IntegrityGtdData/api/Taskapi"
 	});
 	return task;
 });

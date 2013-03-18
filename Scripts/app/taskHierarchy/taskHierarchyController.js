@@ -6,15 +6,20 @@ define(['app/collections/tasks', 'app/taskHierarchy/taskHierarchyView', 'app/eve
 		this.controller = function (model) {
 			var view;
 			this.start = function () {
+				taskHierarchyViewType.prototype.rootCollection = model.collection;
 				view = new taskHierarchyViewType({ model: model });
 				view.render();
-				sink.on('task:selected', view.taskSelected, view);
-				sink.on('tasks:taskAddedToParent', view.taskAddedToParent, view);
+				$("#hierarchy").html(view.$el);
+				sink.on("router:taskIdSelected", this.selectTask, view);
 			};
 			this.destroy = function () {
-				sink.off('task:selected');
-				sink.off('tasks:taskAddedToParent', view.taskAddedToParent);
+				sink.off("router:taskIdSelected", this.selectTask);
 			};
+			this.selectTask = function(args) {
+				var task = view.rootCollection.get(args);
+				view.taskSelected(task);
+			};
+
 		};
 		return controller;
 	});

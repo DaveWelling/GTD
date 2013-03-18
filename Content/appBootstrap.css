@@ -14,8 +14,8 @@
  }
 
 .selectedimage{
- list-style-image:url(../Images/selected.png);
- cursor:pointer;
+	list-style-type:  none;
+	cursor:pointer;
  }
 
 

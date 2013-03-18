@@ -1,4 +1,4 @@
 ﻿var AppConstants =
 {
-	RootId: "C6B93701-3414-4B5C-9509-87D8AA0725F6"
+	RootId: "c6b93701-3414-4b5c-9509-87d8aa0725f6"
 }

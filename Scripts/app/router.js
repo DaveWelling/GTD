@@ -11,7 +11,7 @@ define(['app/eventSink'], function (sink) {
 
 		gotoTask: function (taskId) {
 			console.log("gotoTask :in " + taskId);
-			sink.trigger("task:idSelected", taskId);
+			sink.trigger("router:taskIdSelected", taskId);
 		}
 	});
 	return workspace;

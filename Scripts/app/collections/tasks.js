@@ -1,4 +1,4 @@
-﻿/// <reference path="../../backbone.min.js"/>
+﻿/// <reference path="../../backbone.js"/>
 /// <reference path="../../jquery-1.8.2.min.js"/>
 define(['underscore','backbone', 'app/eventSink', 'app/models/task', 'app/collections/subTasks']
 	, function (_, backbone, sink, taskType, subTasksType) {
@@ -20,10 +20,17 @@ define(['underscore','backbone', 'app/eventSink', 'app/models/task', 'app/collec
 			if ($.isEmptyObject(parentTask)) {
 				throw new Error("No task for parent ID " + parentTaskId);
 			}
-			parentTask.get("children").push(newTask.id);
-			parentTask.sync();
-			sink.trigger("tasks:taskAddedToParent", newTask, parentTask);
-			sink.trigger("task:selected", newTask);
+			
+			// trigger model change event by using set method (instead of just changing property/attribute)
+			var children = parentTask.get("children");
+			// change event won't fire unless a copy of the original
+			// is put into the children property/attribute (because
+			// array is a reference type).
+			var copy = children.slice(0);
+			copy.push(newTask.id);
+			parentTask.set("children", copy);
+
+			parentTask.save();
 		},
 		getSubcollection: function (ids) {
 			var holdTasks = [];

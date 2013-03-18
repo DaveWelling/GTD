@@ -17,6 +17,6 @@ function (subTasksType) {
 	var subTasks = new subTasksType();
 	testUtilities.expectException(function() {
 		subTasks.create({ title: "this should throw an error" });
-	}, "url");
+	}, "Create is not supported");
 }
 );

@@ -23,8 +23,9 @@ require(['app/taskHierarchy/taskHierarchyController'
 			var taskHierarchyController = new taskHierarchyControllerType(rootTask);
 			taskHierarchyController.start();
 
-			//var taskDescriptionsController = new taskDescriptionsControllerType();
-			//taskDescriptionsController.start();
+			var taskDescriptionsController = new taskDescriptionsControllerType(tasks);
+			taskDescriptionsController.start();
+			
 			var workspace = new router();
 			Backbone.history.start();
 		}

@@ -5,7 +5,10 @@ define(['underscore', 'backbone', 'app/models/task']
 
 		var subTasks = backbone.Collection.extend({
 			// Reference to this collection's model.
-			model: taskType
+			model: taskType,
+			create: function() {
+				throw new Error("Create is not supported for the subTasks collection.");
+			}
 		});
 		return subTasks;
 	});

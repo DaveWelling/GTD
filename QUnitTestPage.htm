@@ -18,18 +18,17 @@
 	
 	
 	<script id="node-template" type="text/template">
-		<span>
-				<a class="taskTitle" href="#/task/<%= id %>"><%= title %></a>
-				<div class="taskAdd"></div>
-				</span>
+		<span data-taskId="<%= Id %>">
+			<a class="taskTitle" href="#/task/<%= Id %>"><%= title %></a>
+			<div class="taskAdd"></div>
+		</span>
 		<ul></ul>
-	
 	</script>
 
 	<!-- Unit test code goes here -->  
+	<script src="Scripts/appTests/taskHierarchy/taskHierarchyController.test.js"></script>
 	<script src="Scripts/appTests/collections/tasks.test.js"></script>
 	<script src="Scripts/appTests/models/task.test.js"></script>
-	<script src="Scripts/appTests/taskHierarchy/taskHierarchyController.test.js"></script>
 	<script src="Scripts/appTests/eventSink.test.js"></script>
 	<script src="Scripts/appTests/taskHierarchy/taskHierarchyView.integration.test.js"></script>
 	<script src="Scripts/appTests/taskHierarchy/taskHierarchyView.test.js"></script>

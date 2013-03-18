@@ -1,53 +1,51 @@
 ﻿/// <reference path="../qunit.js"/>
 /// <reference path="../../require.js"/>
 /// <reference path="../sinon-1.4.2.js"/>
-/// <reference path="../sinon-qunit-1.0.0.js"/>
 /// <reference path="../createContext.js"/>
+/// <reference path="../amdQunit.js"/>
 
-module("Task Hierarchy Controller Tests.", {
-	setup: function () {
-		var that = this;
-		this.asyncShell = function (numberAssertionsExpected, testFunction) {
-			expect(numberAssertionsExpected);
-			stop(2000);
-			this.ctxt(['app/taskHierarchy/taskHierarchyController', 'app/eventSink']
-				, function (controllerType, sink) {
-				var controller = new controllerType();
-				try {
-					testFunction = _.bind(testFunction, that);
-					testFunction(controller, sink);
-					controller.destroy();
-				} catch (e) {
-					controller.destroy();
-					throw e;
-				}
-				start();
-			});
-		};
-		this.view = {
-			render: sinon.stub(),
-			taskAddedToParent: sinon.stub()
-		};
-		this.stubs = {
+var taskHierarchyControllerTests = {
+	view : {
+		render: sinon.stub(),
+		taskSelected: sinon.stub(),
+		rootCollection: {get: function() {}}
+		},
+		stubs : {
 			'app/taskHierarchy/taskHierarchyView': function () {
-				return that.view;
+				return taskHierarchyControllerTests.view;
 			}
-		};
-		this.ctxt = new CreateContext(this.stubs);
-	}
-});
+		}
+};
 
-test("start viewTypeExists renderCalled", function () {
-	this.asyncShell(1, function (controller, sink) {
-		controller.start();
-		ok(this.view.render.calledOnce, "render was called once on the task list view");
-	});
-});
+module("Task Hierarchy Controller Tests.");
 
-test("tasks:taskAddedToParent validTaskAdded taskAddedToParent called", function () {
-	this.asyncShell(1, function (controller, sink) {
+
+amdTest("start | viewTypeExists | renderCalled", 
+	1,
+	["app/taskHierarchy/taskHierarchyController"],
+	function (controllerType) {
+		var modelFake = { collection: { get: function () { } } };
+		var controller = new controllerType(modelFake);
 		controller.start();
-		sink.trigger("tasks:taskAddedToParent");
-		ok(this.view.taskAddedToParent.calledOnce, "tasks:taskAddedToParent should trigger view.taskAddedToParent");
-	});
-});
+		ok(taskHierarchyControllerTests.view.render.calledOnce, "render was called once on the task list view");
+	},
+	taskHierarchyControllerTests.stubs
+);
+
+
+amdTest("router:taskIdSelected | causes taskSelected to run",
+	1,
+	["app/taskHierarchy/taskHierarchyController", "app/eventSink"]
+	, function (controllerType, sink) {
+		var modelFake = { collection: {} };
+		var controller = new controllerType(modelFake);
+		controller.start();
+		sink.trigger("router:taskIdSelected", 9999);
+
+		ok(taskHierarchyControllerTests.view.taskSelected.calledOnce);
+	},
+	taskHierarchyControllerTests.stubs
+);
+
+
+

@@ -4,8 +4,7 @@
 		jquery: 'jquery-1.8.2.min',
 		handlebars: 'Handlebars',
 		underscore: 'underscore',
-		backbone: 'backbone.min',
-		kendo: 'kendo/2012.3.1114/kendo.web.min',
+		backbone: 'backbone',
 		marionette: 'backbone.marionette.min'
 	},
 	shim: {
@@ -20,10 +19,6 @@
 		hbs: {
 			exports: 'hbs',
 			deps: ['handlebars', 'hbs/underscore']
-		},
-		kendo: {
-			exports: 'kendo',
-			deps: ['jquery']
 		},
 		marionette: {
 			deps: ['backbone','underscore', 'jquery']
