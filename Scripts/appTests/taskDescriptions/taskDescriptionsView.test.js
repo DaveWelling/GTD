@@ -23,6 +23,7 @@ module("TaskDescriptions View Tests", {
 			this.mockDom = $('<div id="descriptionsContainer"> \
 						<input id="taskTitleInput" type="text" placeholder="Enter a task title" />  \
 						<textarea id="taskLongDescription"></textarea> \
+						<input type="radio" id="radio-choice-actionPending" /> \
 					</div>');
 			// mock out kendo methods
 			var longDescriptionElement = this.mockDom[0].children[1];
@@ -53,6 +54,7 @@ test("selectedTask viewContainsSelectedTask selectedTaskReturned", function () {
 		sink.off("task:titleChanged", titleChangedCallback);
 	});
 });
+
 
 
 amdTest("LongDescriptionChanged.proxy | new text entered | model updated with text",

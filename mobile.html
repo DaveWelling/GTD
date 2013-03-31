@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Integrity GTD</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link href="Content/jquery.mobile-1.3.0.min.css" rel="stylesheet" />
+	<link href="Scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="Scripts/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+	<link href="Content/appBootstrap.css" rel="stylesheet" />
+	<style type="text/css">
+		body {
+			padding-top: 60px;
+			padding-bottom: 40px;
+		}
+
+		.sidebar-nav {
+			padding: 9px 0;
+		}
+
+		.hideHeading legend {
+			display: none;
+		}
+
+		@media (max-width: 980px) {
+			/* Enable use of floated navbar text */
+			.navbar-text.pull-right {
+				float: none;
+				padding-left: 5px;
+				padding-right: 5px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<!-- See about using swipe to navigate:
+		http://view.jquerymobile.com/1.3.0/docs/examples/swipe/swipe-page.php#&ui-state=dialog
+		-->
+
+
+	<div id="hierarchyPage" data-role="page">
+
+		<div data-role="header">
+			<h1>Tasks</h1>
+			<a href="#filters" class="ui-btn-left" data-icon="arrow-l" data-direction="reverse">Filters</a>
+		</div>
+
+		<ul id="hierarchy"></ul>
+
+		<div data-role="footer" style="text-align: center">
+			<p style="margin-top: 7px">Integrity GTD</p>
+		</div>
+	</div>
+	<div data-role="page" id="filters">
+		<div data-role="header">
+			<h1>Filters</h1>
+			<a href="#hierarchyPage" class="ui-btn-right" data-icon="arrow-r" data-direction="reverse">Tasks</a>
+		</div>
+
+		<div id="filterGroup" class="hideHeading" data-role="collapsible-set">
+			<div data-role="collapsible">
+				<h3>State
+                        </h3>
+				<div id="checkState" data-role="fieldcontain">
+					<fieldset data-role="controlgroup" data-type="vertical">
+						<legend></legend>
+						<input type="checkbox" name="checkActionPending" id="checkActionPending" checked="checked" />
+						<label for="checkActionPending">Action Pending</label>
+						<input type="checkbox" name="checkComplete" id="checkComplete" />
+						<label for="checkComplete">Complete</label>
+						<input type="checkbox" name="checkArchived" id="checkArchived" />
+						<label for="checkArchived">Archived</label>
+					</fieldset>
+				</div>
+			</div>
+			<div data-role="collapsible" data-collapsed="false">
+				<h3>When
+                        </h3>
+				<div id="checkboxes12" data-role="fieldcontain">
+					<fieldset data-role="controlgroup" data-type="vertical">
+						<legend></legend>
+						<input type="checkbox" name="checkNow" id="checkNow" />
+						<label for="checkNow">Now</label>
+						<input type="checkbox" name="checkNext" id="checkNext" />
+						<label for="checkNext">Next</label>
+						<input type="checkbox" name="checkSoon" checked="checked" id="checkSoon" />
+						<label for="checkSoon">Soon</label>
+						<input type="checkbox" name="checkLater" id="checkLater" />
+						<label for="checkLater">Later</label>
+						<input type="checkbox" name="checkSomeday" id="checkSomeday" />
+						<label for="checkSomeday">Someday</label>
+						<input type="checkbox" name="checkWaiting" id="checkWaiting" />
+						<label for="checkWaiting">Waiting</label>
+					</fieldset>
+				</div>
+			</div>
+			<div data-role="collapsible">
+				<h3>Where
+                        </h3>
+				<div id="filterWhere" data-role="fieldcontain">
+					<fieldset data-role="controlgroup" data-type="vertical">
+						<legend></legend>
+						<input type="checkbox" name="checkWork" id="checkWork" checked="checked" />
+						<label for="checkWork">Work</label>
+						<input type="checkbox" name="checkHome" id="checkHome" />
+						<label for="checkHome">Home</label>
+						<input type="checkbox" name="checkCar" id="checkCar" />
+						<label for="checkCar">Car</label>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<!--		<div class="accordion" id="filtersAccordian">
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#filtersAccordian" href="#filtersAccordian1">State
+					</a>
+				</div>
+				<div id="filtersAccordian1" class="accordion-body collapse">
+					<div class="accordion-inner">
+						<input type="checkbox" name="checkActionPending" id="checkActionPending" checked="checked" />
+						<label for="checkActionPending">Action Pending</label>
+						<input type="checkbox" name="checkComplete" id="checkComplete" />
+						<label for="checkComplete">Complete</label>
+						<input type="checkbox" name="checkRemoved" id="checkRemoved" />
+						<label for="checkRemoved">Removed</label>
+					</div>
+				</div>
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#filtersAccordian" href="#filtersAccordian2">When</a>
+				</div>
+				<div id="filtersAccordian2" class="accordion-body collapse">
+					<div class="accordion-inner">
+						<input type="checkbox" name="checkNow" id="checkNow" />
+						<label for="checkNow">Now</label>
+						<input type="checkbox" name="checkNext" id="checkNext" />
+						<label for="checkNext">Next</label>
+						<input type="checkbox" name="checkSoon" checked="checked" id="checkSoon" />
+						<label for="checkSoon">Soon</label>
+						<input type="checkbox" name="checkLater" id="checkLater" />
+						<label for="checkLater">Later</label>
+						<input type="checkbox" name="checkSomeday" id="checkSomeday" />
+						<label for="checkSomeday">Someday</label>
+						<input type="checkbox" name="checkWaiting" id="checkWaiting" />
+						<label for="checkWaiting">Waiting</label>
+					</div>
+				</div>
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#filtersAccordian" href="#filtersAccordian3">Where</a>
+				</div>
+				<div id="filtersAccordian3" class="accordion-body collapse">
+					<div class="accordion-inner">
+						<input type="checkbox" name="checkWork" id="checkWork" checked="checked" />
+						<label for="checkWork">Work</label>
+						<input type="checkbox" name="checkHome" id="checkHome" />
+						<label for="checkHome">Home</label>
+						<input type="checkbox" name="checkCar" id="checkCar" />
+						<label for="checkCar">Car</label>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		-->
+		<div data-role="footer" style="text-align: center">
+			<p style="margin-top: 7px">Integrity GTD</p>
+		</div>
+	</div>
+
+	<div data-role="page" id="task">
+
+		<div data-role="header">
+			<h1>Task Details</h1>
+			<a href="#hierarchyPage" class="ui-btn-left" data-icon="arrow-l" data-direction="reverse">Tasks</a>
+		</div>
+
+		<div data-role="content">
+			<div id="descriptionsContainer" class="row-fluid">
+				<div>
+					<input id="taskTitleInput" style="width: 100%" type="text" placeholder="Title" />
+					<textarea id="taskLongDescription" style="width: 100%"></textarea>
+				</div>
+				<fieldset data-role="controlgroup">
+					<legend>State</legend>
+					<input type="radio" name="state" checked="checked" value="actionPending" id="radio-choice-actionPending" />
+					<label for="radio-choice-actionPending">Action Pending</label>
+					<input type="radio" name="state" value="complete" id="radio-choice-complete" />
+					<label for="radio-choice-complete">Complete</label>
+					<input type="radio" name="state" id="radio-choice-removed" />
+					<label for="radio-choice-removed">Removed</label>
+				</fieldset>
+				<fieldset data-role="controlgroup">
+					<legend>When</legend>
+					<input type="radio" name="whenDetail" value="Now" id="radioNow" />
+					<label for="radioNow">Now</label>
+					<input type="radio" name="whenDetail" value="Next" id="radioNext" />
+					<label for="radioNext">Next</label>
+					<input type="radio" name="whenDetail" checked="checked" id="radioSoon" />
+					<label for="radioSoon">Soon</label>
+					<input type="radio" name="whenDetail" id="radioLater" />
+					<label for="radioLater">Later</label>
+					<input type="radio" name="whenDetail" id="radioSomeday" />
+					<label for="radioSomeday">Someday</label>
+					<input type="radio" name="whenDetail" id="radioWaiting" />
+					<label for="radioWaiting">Waiting</label>
+				</fieldset>
+				<fieldset data-role="controlgroup">
+					<legend>Where</legend>
+					<input type="radio" name="whereDetail" id="radioWork" checked="checked" />
+					<label for="radioWork">Work</label>
+					<input type="radio" name="whereDetail" id="radioHome" />
+					<label for="radioHome">Home</label>
+					<input type="radio" name="whereDetail" id="radioCar" />
+					<label for="radioCar">Car</label>
+				</fieldset>
+			</div>
+		</div>
+
+		<div data-role="footer" style="text-align: center">
+			<p style="margin-top: 7px">Integrity GTD</p>
+		</div>
+	</div>
+
+
+	<!--	<script src="Scripts/jquery-1.8.2.min.js"></script>
+	<script src="Scripts/jquery.mobile-1.3.0.min.js"></script>-->
+	<!--<script src="Scripts/bootstrap/js/bootstrap.min.js"></script>-->
+	<script src="Scripts/app/constants.js"></script>
+	<!--<script src="Scripts/tinyMce/tiny_mce.js"></script>-->
+	<script>
+		
+	</script>
+	<script id="node-template" type="text/template">
+		<span data-taskId="<%= Id %>">
+			<a class="taskTitle" href="#/task/<%= Id %>"><%= title %></a>
+			<div class="taskAdd"></div>
+		</span>
+		<ul></ul>
+	</script>
+	<script src="Scripts/requireConfig.js" type="text/javascript"></script>
+	<script data-main="main" src="Scripts/require.js"></script>
+</body>
+</html>

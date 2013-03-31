@@ -1,40 +1,68 @@
 ﻿module("TaskDescriptions Controller Tests", {
 	setup: function() {
-		var that = this;
-		this.asyncShell = function (numberAssertionsExpected, testFunction) {
-			expect(numberAssertionsExpected);
-			stop(2000);
-			that.ctxt(['app/taskDescriptions/taskDescriptionsController', 'app/eventSink']
-				, function (controllerType, sink) {
-					var controller = new controllerType();
-					try {
-						testFunction = _.bind(testFunction, that);
-						testFunction(controller, sink);
-						controller.destroy();
-					} catch (e) {
-						controller.destroy();
-						throw e;
-					}
-					start();
-				});
-		};
-		this.view = {
-			render: sinon.stub(),
-			taskSelected: sinon.stub()
-		};
-		this.stubs = {
-			'app/taskDescriptions/taskDescriptionsView': function () {
-				return that.view;
-			}
-		};
-		this.ctxt = new CreateContext(this.stubs);
 	}
 });
 
-test("task:selected raised view.taskSelected called", function () {
-	this.asyncShell(1, function (controller, sink) {
+var taskDescriptionsControllerTest = (function () {
+	var viewFake = {
+		taskSelected : sinon.spy()
+	};
+	_.extend(viewFake, Backbone.Events);
+	
+	var output = {};
+	output.fakes = {
+		// Always return the same object;
+		"app/taskDescriptions/taskDescriptionsView": function() {
+			return viewFake;
+		}
+	};
+	return output;
+}());
+
+amdTest("Current task state = 'Archived' | view state changes to 'ActionPending' | Current task state = 'ActionPending'",
+	1,
+	["app/taskDescriptions/taskDescriptionsController", "app/models/task"],
+	function (controllerType, taskType) {
+		var view = taskDescriptionsControllerTest.fakes["app/taskDescriptions/taskDescriptionsView"]();
+		var task = new taskType({ State: "Archived" });
+		var controller = new controllerType();
 		controller.start();
-		sink.trigger("task:selected");
-		ok(this.view.taskSelected.calledOnce, "TaskDescriptions render should be called when a task is selected.");
-	});
-});
+		controller.setCurrentTask(task);
+		view.trigger("StateChanged", "ActionPending");
+
+		equal(controller.getCurrentTask().get("State"), "ActionPending");
+	},
+	taskDescriptionsControllerTest.fakes
+);
+
+amdTest("setCurrentTask | previous task null | getCurrentTask returns new task",
+	1,
+	["app/taskDescriptions/taskDescriptionsController", "app/models/task"],
+	function (controllerType, taskType) {
+		var task = new taskType();
+		var controller = new controllerType();
+		controller.start();
+		controller.setCurrentTask(task);
+
+		equal(controller.getCurrentTask(), task);
+	},
+	taskDescriptionsControllerTest.fakes
+);
+
+
+amdTest("setCurrentTask | valid task passed | taskSelected called on view with passed task",
+	2,
+	["app/taskDescriptions/taskDescriptionsController", "app/models/task"],
+	function (controllerType, taskType) {
+		var view = taskDescriptionsControllerTest.fakes["app/taskDescriptions/taskDescriptionsView"]();
+		var task = new taskType();
+		var controller = new controllerType();
+		controller.start();
+		controller.setCurrentTask(task);
+
+		// uses a sinon spy on taskSelected in fake
+		ok(view.taskSelected.calledOnce);
+		ok(view.taskSelected.calledWith(task));
+	},
+	taskDescriptionsControllerTest.fakes
+);

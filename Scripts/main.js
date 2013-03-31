@@ -1,13 +1,17 @@
 ﻿/// <reference path="app/constants.js"/>
 /// <reference path="backbone.min.js"/>
 
-require(['app/taskHierarchy/taskHierarchyController'
+require(['jquery'
+		, 'app/taskHierarchy/taskHierarchyController'
 		, 'app/collections/tasks'
 		, 'app/models/task'
 		, 'app/taskDescriptions/taskDescriptionsController'
 		, 'app/router'
-		, 'app/taskHierarchy/taskHierarchyView']
-, function (taskHierarchyControllerType, tasksType, taskType, taskDescriptionsControllerType, router, TaskHierarchyView) {
+		, 'app/taskHierarchy/taskHierarchyView'
+		, 'jquery.mobile'
+		, 'bootstrap'
+		, 'tinyMCE']
+, function ($, taskHierarchyControllerType, tasksType, taskType, taskDescriptionsControllerType, router, TaskHierarchyView) {
 	"use strict";
 	
 

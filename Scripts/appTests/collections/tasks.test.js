@@ -73,7 +73,10 @@ amdTest("getSubcollection | given valid ids | returns collection with tasks for 
 		ok(subCollection.some(function (task) { return task.id === 4; }), "should have id 4");
 		ok(subCollection.some(function (task) { return task.id === 5; }), "should have id 5");
 		ok(subCollection.some(function (task) { return task.id === 9; }), "should have id 9");
-	}
+	},
+	['app/view/myView'],
+	function (view)
+{return "fake"}
 );
 
 amdTest({

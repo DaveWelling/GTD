@@ -17,7 +17,7 @@ define(['backbone', 'app/utilities'], function (backbone, appUtilities) {
 				this.set("children", []);
 			}
 		},
-		url: "http://localhost/IntegrityGtdData/api/Taskapi"
+		url: "http://molly/IntegrityGtdData/api/Taskapi"
 	});
 	return task;
 });

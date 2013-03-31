@@ -9,20 +9,35 @@ define(['jquery','backbone', 'underscore', 'app/eventSink'], function ($, backbo
 	var taskDescriptions = backbone.View.extend({
 		el: "#descriptionsContainer",
 		initialize: function () {
-			this.editor = tinyMCE.get('taskLongDescription');
-			this.editor.onChange.add(this.taskDescriptionChanged, this);
 		},
 		events: {
-			"change #taskTitleInput": "taskTitleChanged"
+			"change #taskTitleInput": "taskTitleChanged",
+			"change input[type='radio']": "tagOrStateChange"
 		},
 		editor: null,
 		render: function () {
-			
-			this.editor.setContent(this.model.get("description"));
+			if (this.editor === null) {
+				tinyMCE.onAddEditor.add(function(mgr, ed) {
+					this.editor = ed;
+					this.editor.onChange.add(this.taskDescriptionChanged, this);
+					this.editor.onInit.add(function() {
+						ed.setContent(this.model.get("description"));
+					}, this);
+				}, this);
+				tinyMCE.init({
+					mode: "textareas",
+					theme: "simple",
+				});
+			} else {
+				this.editor.setContent(this.model.get("description"));
+			}
 			
 			var $taskInput = this.$el.find("#taskTitleInput");
 			$taskInput.val(this.model.get("title"));
 			$taskInput[0].select();
+		},
+		tagOrStateChange: function() {
+			
 		},
 		taskDescriptionChanged: function () {
 			this.model.set("description", this.editor.getContent());

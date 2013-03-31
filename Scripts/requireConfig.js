@@ -2,27 +2,38 @@
 	baseUrl: 'Scripts',
 	paths: {
 		jquery: 'jquery-1.8.2.min',
+		'jquery.mobile-config': 'jquery.mobile-config',
+		'jquery.mobile': 'jquery.mobile-1.3.0.min',
 		handlebars: 'Handlebars',
 		underscore: 'underscore',
 		backbone: 'backbone',
-		marionette: 'backbone.marionette.min'
+		marionette: 'backbone.marionette.min',
+		bootstrap: 'bootstrap/js/bootstrap.min',
+		tinyMCE: 'tinyMce/tiny_mce'
 	},
 	shim: {
 		//'backbone-localStorage': ['backbone'],
 		underscore: {
 			exports: '_'
 		},
+		jquery: {
+			exports: '$'
+		},
 		backbone: {
 			exports: 'Backbone',
 			deps: ['underscore']
 		},
+		'jquery.mobile-config': ['jquery'],
+		'jquery.mobile': ['jquery', 'jquery.mobile-config'],
 		hbs: {
 			exports: 'hbs',
 			deps: ['handlebars', 'hbs/underscore']
 		},
 		marionette: {
 			deps: ['backbone','underscore', 'jquery']
-		}
+		},
+		bootstrap: ['jquery'],
+		tinyMCE: ['jquery']
 	},
 	deps: ['jquery'],
 	hbs: {
