@@ -7,11 +7,19 @@ require(['jquery'
 		, 'app/models/task'
 		, 'app/taskDescriptions/taskDescriptionsController'
 		, 'app/router'
+		, 'app/taskFilters/taskFiltersController'
 		, 'app/taskHierarchy/taskHierarchyView'
 		, 'jquery.mobile'
 		, 'bootstrap'
 		, 'tinyMCE']
-, function ($, taskHierarchyControllerType, tasksType, taskType, taskDescriptionsControllerType, router, TaskHierarchyView) {
+, function ($
+	, taskHierarchyControllerType
+	, tasksType
+	, taskType
+	, taskDescriptionsControllerType
+	, router
+	, taskFiltersControllerType
+	, TaskHierarchyView) {
 	"use strict";
 	
 
@@ -29,7 +37,10 @@ require(['jquery'
 
 			var taskDescriptionsController = new taskDescriptionsControllerType(tasks);
 			taskDescriptionsController.start();
-			
+
+			var taskFiltersController = new taskFiltersControllerType();
+			taskFiltersController.start();
+
 			var workspace = new router();
 			Backbone.history.start();
 		}

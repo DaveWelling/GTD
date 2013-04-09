@@ -18,7 +18,7 @@
 //	  ...
 // };
 // I hate this, so let me know if you can think of a better way.  
-amdTestTimeout = 2000;
+amdTestTimeout = 5000;
 
 // add sinon stuff for mocking, spies, etc.
 sinon.assert.fail = function (msg) {

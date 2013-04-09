@@ -8,97 +8,37 @@
 /// <reference path="../../backbone.min.js"/>
 /// <reference path="../../app/constants.js"/>
 /// <reference path="../amdQunit.js"/>
+var taskHierarchyViewTest = (function() {
+	var output = {};
+	output.getHierarchyCollection = function (tasksType) {
+		var tasks = new tasksType();
+		var firstGrandchild = new tasks.model(
+			{
+				Id: 3,
+				title: 'firstGrandchild',
+				children: []
+			});
+		tasks.add(tasks);
+		var firstChild = new tasks.model(
+			{
+				Id: 2,
+				title: 'firstChild',
+				children: [firstGrandchild.get("Id")]
+			});
+		tasks.add(firstChild);
+		output.root = new tasks.model(
+			{
+				Id: AppConstants.RootId,
+				title: 'root',
+				children: [firstChild.get("Id")]
+			});
+		tasks.add(output.root);
+		return tasks;
+	};
+	return output;
+}());
 
-module("Task Hierarchy View Tests", {
-	setup: function () {
-		var that = this;
-		//this.asyncShell = function(numberAssertionsExpected, testFunction) {
-		//	expect(numberAssertionsExpected);
-		//	stop(2000);
-		//	this.ctxt(['app/taskList/taskListView', 'app/collections/tasks', 'app/eventSink'], function(viewType, tasksType, sink) {
-		//		var hierarchyCollection = that.getHierarchyCollection(tasksType);
-		//		var view = new viewType({ collection: hierarchyCollection });
-		//		try {
-		//			testFunction = _.bind(testFunction, that);
-		//			testFunction(view, hierarchyCollection, sink);
-		//			hierarchyCollection.destroy();
-		//		} catch(e) {
-		//			hierarchyCollection.destroy();
-		//			throw e;
-		//		}
-		//		start();
-		//	});
-		//};
-		////taskListTemplate
-		//this.fakeTemplateResult = function () {
-		//	var content = "<li data-taskId='" + AppConstants.RootId + "'>whatever</li>";
-		//	return $(content)[0];
-		//};
-		//this.template = {
-		//	load: function (name, req, onload, config) {
-		//		that.template.loadCalled = true;
-		//		onload(that.fakeTemplateResult);
-		//	},
-		//	loadCalled: false
-		//};
-		//this.stubs = {
-		//	'hbs': that.template
-		//};
-		//this.ctxt = new CreateContext(this.stubs);
-		
-		this.generateTwoTierHierarchy = function () {
-			var hierarchyView = $(' \
-<span data-taskId="' + AppConstants.RootId + '>"> \
-	<a class="taskTitle" href="#/task/' + AppConstants.RootId + '">hiearchy</a> \
-	<div class="taskAdd"></div> \
-</span> \
-<ul> \
-	<span data-taskId="firstChild"> \
-		<a class="taskTitle" href="#/task/firstChild">First Child</a> \
-		<div class="taskAdd"></div> \
-	</span> \
-	<ul> \
-	</ul> \
-</ul> \
-');
-			return hierarchyView;
-		};
-		this.getHierarchyCollection = function (tasksType) {
-			var tasks = new tasksType();
-			var firstGrandchild = new tasks.model(
-				{
-					Id: 3,
-					title: 'firstGrandchild',
-					children: []
-				});
-			tasks.add(tasks);
-			var firstChild = new tasks.model(
-				{
-					Id: 2,
-					title: 'firstChild',
-					children: [firstGrandchild.get("Id")]
-				});
-			tasks.add(firstChild);
-			this.root = new tasks.model(
-				{
-					Id: AppConstants.RootId,
-					title: 'root',
-					children: [firstChild.get("Id")]
-				});
-			tasks.add(this.root);
-			return tasks;
-		};
-	},
-	teardown: function () {
-		//var hierarchy = $(document).find("#hierarchy");
-		//if (hierarchy.length > 0) {
-		//	document.removeChild(hierarchy[0]);
-		//}
-		//localStorage.clear();
-	}
-});
-
-
+module("Task Hierarchy View Tests");
 
 amdTest({
 	testDescription: "taskAddedToParent | validTaskAndParentTask | newChildNodeAppendedToParentNode",
@@ -113,10 +53,10 @@ amdTest({
 		viewType.prototype.rootCollection = tasks;
 		var view = new viewType({ model: parentTask });
 		view.render();
-
+		view.on("render", function () {
+			equal(view.$el.find('[data-taskId=2]').length, 1);
+		});
 		parentTask.set("children", [2]);
-
-		equal(view.$el.find('[data-taskId=2]').length, 1);
 	}
 });
 
@@ -138,7 +78,7 @@ amdTest("getSelectedTask | view Contains Selected Task | selected Task Returned"
 	1,
 	["app/taskHierarchy/taskHierarchyView", 'app/collections/tasks'],
 	function (viewType, tasksType) {
-		var tasks = this.getHierarchyCollection(tasksType);
+		var tasks = taskHierarchyViewTest.getHierarchyCollection(tasksType);
 		viewType.prototype.rootCollection = tasks;
 		var view = new viewType({ model: tasks.get(AppConstants.RootId) });
 		view.render();
@@ -184,9 +124,9 @@ amdTest({
 	amdDependencies: ["app/taskHierarchy/taskHierarchyView", "app/collections/tasks", 'app/eventSink'],
 	testFunction: function(viewType, tasksType, sink) {
 		stop();
-		var tasks = this.getHierarchyCollection(tasksType);
+		var tasks = taskHierarchyViewTest.getHierarchyCollection(tasksType);
 		viewType.prototype.rootCollection = tasks;
-		var view = new viewType({ model: this.root });
+		var view = new viewType({ model: taskHierarchyViewTest.root });
 		view.render();
 		var target = view.$el.find(".taskAdd").first()[0];
 		var fakeEventArgs = {

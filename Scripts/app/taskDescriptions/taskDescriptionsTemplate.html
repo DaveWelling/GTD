@@ -1,0 +1,37 @@
+﻿<div>
+	<input id="taskTitleInput" style="width: 100%" type="text" placeholder="Title" />
+	<textarea id="taskLongDescription" style="width: 100%"></textarea>
+</div>
+<fieldset data-role="controlgroup">
+	<legend>State</legend>
+	<input type="radio" name="state" checked="checked" value="Action Pending" id="radio-choice-actionPending" />
+	<label for="radio-choice-actionPending">Action Pending</label>
+	<input type="radio" name="state" value="Complete" id="radio-choice-complete" />
+	<label for="radio-choice-complete">Complete</label>
+	<input type="radio" name="state" value="Removed" id="radio-choice-removed" />
+	<label for="radio-choice-removed">Removed</label>
+</fieldset>
+<fieldset data-role="controlgroup">
+	<legend>When</legend>
+	<input type="radio" name="whenDetail" value="Now" id="radioNow" />
+	<label for="radioNow">Now</label>
+	<input type="radio" name="whenDetail" value="Next" id="radioNext" />
+	<label for="radioNext">Next</label>
+	<input type="radio" name="whenDetail" value="Soon" checked="checked" id="radioSoon" />
+	<label for="radioSoon">Soon</label>
+	<input type="radio" name="whenDetail" value="Later" id="radioLater" />
+	<label for="radioLater">Later</label>
+	<input type="radio" name="whenDetail" value="Someday" id="radioSomeday" />
+	<label for="radioSomeday">Someday</label>
+	<input type="radio" name="whenDetail" value="Waiting" id="radioWaiting" />
+	<label for="radioWaiting">Waiting</label>
+</fieldset>
+<fieldset data-role="controlgroup">
+	<legend>Where</legend>
+	<input type="radio" name="whereDetail" value="Work" id="radioWork" checked="checked" />
+	<label for="radioWork">Work</label>
+	<input type="radio" name="whereDetail" value="Home" id="radioHome" />
+	<label for="radioHome">Home</label>
+	<input type="radio" name="whereDetail" value="Car" id="radioCar" />
+	<label for="radioCar">Car</label>
+</fieldset>

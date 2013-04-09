@@ -11,6 +11,8 @@ define(['app/collections/tasks', 'app/taskDescriptions/taskDescriptionsView', 'a
 				taskDescriptionsView = new taskDescriptionsViewType();
 				sink.on('router:taskIdSelected', this.setCurrentTaskForTaskId, this);
 				taskDescriptionsView.on("StateChanged", handleStateChange, this);
+				taskDescriptionsView.on("WhenChanged", handleWhenChange, this);
+				taskDescriptionsView.on("WhereChanged", handleWhereChange, this);
 			};
 			this.destroy = function () {
 				sink.off('router:taskIdSelected', this.setCurrentTaskForTaskId);
@@ -20,9 +22,17 @@ define(['app/collections/tasks', 'app/taskDescriptions/taskDescriptionsView', 'a
 				that.setCurrentTask(task);
 			};
 			var handleStateChange = function(newState) {
-				currentTask.set("State", newState);
+				currentTask.set("status", newState);
+				currentTask.save();
 			};
-			
+			var handleWhenChange = function (newWhen) {
+				currentTask.set("when", newWhen);
+				currentTask.save();
+			};
+			var handleWhereChange = function (newWhere) {
+				currentTask.set("where", newWhere);
+				currentTask.save();
+			};
 			this.setCurrentTask = function(task) {
 				currentTask = task;
 				taskDescriptionsView.taskSelected(task);
@@ -30,7 +40,6 @@ define(['app/collections/tasks', 'app/taskDescriptions/taskDescriptionsView', 'a
 			this.getCurrentTask = function() {
 				return currentTask;
 			};
-
 		};
 		return controller;
 	});

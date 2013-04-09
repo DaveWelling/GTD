@@ -7,7 +7,10 @@ define(['backbone', 'app/utilities'], function (backbone, appUtilities) {
 		defaults: {
 			title: 'new task',
 			description: '',
-			children: []
+			children: [],
+			status: "Action Pending",
+			when: "Soon",
+			where: "Work"
 		},
 		initialize: function () {
 			if (this.get("Id") == null) {

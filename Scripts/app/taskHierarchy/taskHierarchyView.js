@@ -13,14 +13,18 @@
 				var task = this.model;
 				task.on("change:children", this.taskChildrenChanged, this);
 				task.on("change:title", this.taskTitleChanged, this);
-				this.collection = this.rootCollection.getSubcollection(task.get("children"));
+				
 			},
 			taskChildrenChanged: function(eventArgs) {
 				var newTaskIds = _.difference(eventArgs.attributes.children, eventArgs._previousAttributes.children);
 				_.each(newTaskIds, function(newTaskId) {
 					var newTask = this.rootCollection.get(newTaskId);
 					this.collection.add(newTask);
+					this.render();
 				}, this);
+			},
+			onCompositeModelRendered: function() {
+				this.collection = this.rootCollection.getSubcollection(this.model.get("children"));
 			},
 			onRender: function () {
 				if (_.isUndefined(this.collection)) {

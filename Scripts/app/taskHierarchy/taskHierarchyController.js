@@ -5,12 +5,16 @@ define(['app/collections/tasks', 'app/taskHierarchy/taskHierarchyView', 'app/eve
 	, function (tasksType, taskHierarchyViewType, sink) {
 		this.controller = function (model) {
 			var view;
+			var handleFilterChange = function() {
+				view.render();
+			};
 			this.start = function () {
 				taskHierarchyViewType.prototype.rootCollection = model.collection;
 				view = new taskHierarchyViewType({ model: model });
 				view.render();
 				$("#hierarchy").html(view.$el);
 				sink.on("router:taskIdSelected", this.selectTask, view);
+				model.collection.on("tasks:FilterChange", handleFilterChange);
 			};
 			this.destroy = function () {
 				sink.off("router:taskIdSelected", this.selectTask);

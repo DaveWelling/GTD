@@ -44,7 +44,15 @@ module("Tasks Collection Tests", {
 		};
 	}
 });
-
+var tasksTest = (function() {
+	var outputModule = {};
+	outputModule.defaultFilter = {
+		state: ["Action Pending"],
+		when: ["Now", "Next", "Soon", "Later"],
+		where: ["Work"]
+	};
+	return outputModule;
+}());
 test("on task:addToParent event - where parent does not exist - exception", function () {
 	this.asyncShell(1, function(tasks, sink, taskType, tasksType) {
 		testUtilities.expectException(function() {
@@ -75,8 +83,9 @@ amdTest("getSubcollection | given valid ids | returns collection with tasks for 
 		ok(subCollection.some(function (task) { return task.id === 9; }), "should have id 9");
 	},
 	['app/view/myView'],
-	function (view)
-{return "fake"}
+	function(view) {
+		return "fake";
+	}
 );
 
 amdTest({
@@ -102,3 +111,77 @@ amdTest({
 		originalTask.set("children", copy);
 	}
 });
+
+amdTest("taskFiltersController:FilterChange | Default filter | 'filter' returns default filter",
+	1,
+	["app/collections/tasks", "app/eventSink"],
+	function(tasksType, sink) {
+		var tasks = new tasksType();
+		sink.trigger("taskFiltersController:FilterChange", tasksTest.defaultFilter);
+		deepEqual(tasks.filter, tasksTest.defaultFilter);
+	}
+);
+
+amdTest("taskFiltersController:FilterChange | Default filter | 'filter' returns default filter",
+	1,
+	["app/collections/tasks", "app/eventSink"],
+	function (tasksType, sink) {
+		var tasks = new tasksType();
+		sink.trigger("taskFiltersController:FilterChange", tasksTest.defaultFilter);
+		deepEqual(tasks.filter, tasksTest.defaultFilter);
+	}
+);
+
+amdTest("taskFiltersController:FilterChange | | tasks:FilterChange raised",
+	1,
+	["app/collections/tasks", "app/eventSink"],
+	function (tasksType, sink) {
+		var tasks = new tasksType();
+		var assertion = function() { ok(true); };
+		try {
+			tasks.on("tasks:FilterChange", assertion);
+			sink.trigger("taskFiltersController:FilterChange", tasksTest.defaultFilter);
+		} finally {
+			tasks.off("tasks:FilterChange", assertion);
+		} 
+	}
+);
+
+amdTest("getSubCollection | filter 'when' == 'Now' | returns matching values",
+	1,
+	["app/collections/tasks", "app/models/task"],
+	function(tasksType, taskType) {
+		var tasks = new tasksType();
+		var matchingTask = new taskType({ when: "Now" });
+		var nonmatchingTask = new taskType({ when: "Waiting" });
+		tasks.filter = {
+			when: ["Now"]
+		};
+		tasks.add(matchingTask);
+		tasks.add(nonmatchingTask);
+		var results = tasks.getSubcollection([matchingTask.id, nonmatchingTask.id]);
+		var firstResult = results.first();
+		equal(firstResult.id, matchingTask.id);
+	}
+);
+amdTest("getSubCollection | filter 'when' == 'Now', 'where' == 'Work' | returns matching values",
+	1,
+	["app/collections/tasks", "app/models/task"],
+	function (tasksType, taskType) {
+		var tasks = new tasksType();
+		var matchingTask = new taskType({ when: "Now", where: "Work" });
+		var nonmatchingTask1 = new taskType({ when: "Waiting", where: "Work" });
+		var nonmatchingTask2 = new taskType({ when: "Now", where: "Home" });
+		tasks.filter = {
+			when: ["Now"],
+			where: ["Work"]
+		};
+		tasks.add(matchingTask);
+		tasks.add(nonmatchingTask1);
+		tasks.add(nonmatchingTask2);
+		var ids = tasks.pluck("Id");
+		var results = tasks.getSubcollection(ids);
+		var firstResult = results.first();
+		equal(firstResult.id, matchingTask.id);
+	}
+);
