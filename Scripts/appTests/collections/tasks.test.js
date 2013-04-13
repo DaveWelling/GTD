@@ -11,10 +11,12 @@
 module("Tasks Collection Tests", {
 	setup: function () {
 		var that = this;
+		this.parent456Task = {};
 		this.getTestTasks = function(tasksType) {
 			var tasks = new tasksType();
+			this.parent456Task = new tasks.model({ Id: 1, title: 't_1_1', description: 't_1_1 description', children: [4, 5, 6] });
 			tasks.add(new tasks.model({ Id: AppConstants.RootId, title: 'Tasks', description: 'Tasks', children: [1, 2, 3] }));
-			tasks.add(new tasks.model({ Id: 1, title: 't_1_1', description: 't_1_1 description', children: [4, 5, 6] }));
+			tasks.add(this.parent456Task);
 			tasks.add(new tasks.model({ Id: 2, title: 't_1_2', description: 't_1_2 description' }));
 			tasks.add(new tasks.model({ Id: 3, title: 't_1_3', description: 't_1_3 description' }));
 			tasks.add(new tasks.model({ Id: 4, title: 't_2_1', description: 't_2_1 description', children: [7, 8, 9] }));
@@ -76,11 +78,11 @@ amdTest("getSubcollection | given valid ids | returns collection with tasks for 
 	["app/collections/tasks"],
 	function(TasksType) {
 		var tasks = this.getTestTasks(TasksType);
-		var subCollection = tasks.getSubcollection([4, 5, 9]);
+		var subCollection = tasks.getSubcollection(this.parent456Task);
 		ok(subCollection.length === 3, "Subcollection should have three items");
 		ok(subCollection.some(function (task) { return task.id === 4; }), "should have id 4");
 		ok(subCollection.some(function (task) { return task.id === 5; }), "should have id 5");
-		ok(subCollection.some(function (task) { return task.id === 9; }), "should have id 9");
+		ok(subCollection.some(function (task) { return task.id === 6; }), "should have id 6");
 	},
 	['app/view/myView'],
 	function(view) {
@@ -97,7 +99,7 @@ amdTest({
 		var tasks = this.getTestTasks(tasksType);
 		var originalTask = tasks.get(4);
 		
-		var subCollection = tasks.getSubcollection([4, 5, 9]);
+		var subCollection = tasks.getSubcollection(this.parent456Task);
 		var copiedTask = subCollection.get(4);
 		copiedTask.on("change:children", function(args) {
 			ok(true, "Change event of copied task should fire when original task changes.in ");
@@ -154,12 +156,15 @@ amdTest("getSubCollection | filter 'when' == 'Now' | returns matching values",
 		var tasks = new tasksType();
 		var matchingTask = new taskType({ when: "Now" });
 		var nonmatchingTask = new taskType({ when: "Waiting" });
+		var parentTask = new taskType({ children: [matchingTask.id, nonmatchingTask.id] });
+		
 		tasks.filter = {
 			when: ["Now"]
 		};
 		tasks.add(matchingTask);
 		tasks.add(nonmatchingTask);
-		var results = tasks.getSubcollection([matchingTask.id, nonmatchingTask.id]);
+		tasks.add(parentTask);
+		var results = tasks.getSubcollection(parentTask);
 		var firstResult = results.first();
 		equal(firstResult.id, matchingTask.id);
 	}
@@ -172,6 +177,7 @@ amdTest("getSubCollection | filter 'when' == 'Now', 'where' == 'Work' | returns 
 		var matchingTask = new taskType({ when: "Now", where: "Work" });
 		var nonmatchingTask1 = new taskType({ when: "Waiting", where: "Work" });
 		var nonmatchingTask2 = new taskType({ when: "Now", where: "Home" });
+		var parentTask = new taskType({ children: [matchingTask.id, nonmatchingTask1.id, nonmatchingTask2.id] });
 		tasks.filter = {
 			when: ["Now"],
 			where: ["Work"]
@@ -179,8 +185,10 @@ amdTest("getSubCollection | filter 'when' == 'Now', 'where' == 'Work' | returns 
 		tasks.add(matchingTask);
 		tasks.add(nonmatchingTask1);
 		tasks.add(nonmatchingTask2);
+		tasks.add(parentTask);
+		
 		var ids = tasks.pluck("Id");
-		var results = tasks.getSubcollection(ids);
+		var results = tasks.getSubcollection(parentTask);
 		var firstResult = results.first();
 		equal(firstResult.id, matchingTask.id);
 	}

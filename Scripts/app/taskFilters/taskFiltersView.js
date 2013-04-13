@@ -31,9 +31,10 @@ define(['jquery', 'backbone', 'underscore', 'app/eventSink', 'hbs!app/taskFilter
 			},
 			getFilters: function () {
 				// Get checked input checkboxes for each filter category
-				var $whenInputs = this.$el.find("#checkWhen input[type='checkbox'][checked='checked']");
-				var $stateInputs = this.$el.find("#checkState input[type='checkbox'][checked='checked']");
-				var $whereInputs = this.$el.find("#checkWhere input[type='checkbox'][checked='checked']");
+				// TODO: This is not working.  Look at http://http://stackoverflow.com/questions/11138898/check-if-a-jquery-mobile-checkbox-is-checked
+				var $whenInputs = this.$el.find("#checkWhen input[type='checkbox']").filter(':checked');
+				var $stateInputs = this.$el.find("#checkState input[type='checkbox']").filter(':checked');
+				var $whereInputs = this.$el.find("#checkWhere input[type='checkbox']").filter(':checked');
 				// pluck out the value attributes from the input checkboxes
 				return {
 					status: _.pluck($stateInputs, "value"),

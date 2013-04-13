@@ -6,14 +6,14 @@
 			tagName: "li",
 			itemViewContainer: "ul",
 
-			initialize: function () {
+			initialize: function() {
 				// grab the child collection from the parent model
 				// so that we can render the collection as children
 				// of this parent node
 				var task = this.model;
 				task.on("change:children", this.taskChildrenChanged, this);
 				task.on("change:title", this.taskTitleChanged, this);
-				
+
 			},
 			taskChildrenChanged: function(eventArgs) {
 				var newTaskIds = _.difference(eventArgs.attributes.children, eventArgs._previousAttributes.children);
@@ -24,9 +24,9 @@
 				}, this);
 			},
 			onCompositeModelRendered: function() {
-				this.collection = this.rootCollection.getSubcollection(this.model.get("children"));
+				this.collection = this.rootCollection.getSubcollection(this.model);
 			},
-			onRender: function () {
+			onRender: function() {
 				if (_.isUndefined(this.collection)) {
 					this.$("ul:first").remove();
 				}
@@ -34,12 +34,12 @@
 				var plusButton = this.$el[0].children[0].children[1];
 				$(plusButton).on("click", this.addTaskToParentRequest);
 			},
-			addTaskToParentRequest: function (args) {
+			addTaskToParentRequest: function(args) {
 				var parentNode = args.target.parentNode;
 				var parentTaskId = parentNode.getAttribute('data-taskId');
 				sink.trigger("task:addToParent", parentTaskId);
 			},
-			getSelectedTaskElement: function () {
+			getSelectedTaskElement: function() {
 				var foundTask;
 				if (typeof this.$el != 'undefined') {
 					foundTask = this.$el.find(".selectedTask");
@@ -49,7 +49,7 @@
 				}
 				return null;
 			},
-			taskSelected: function (task) {
+			taskSelected: function(task) {
 				var findString = "[data-taskId='" + task.id + "']";
 				var item = this.$el.find(findString);
 				var selectedItem = this.getSelectedTaskElement();
@@ -58,7 +58,7 @@
 				}
 				$(item).addClass("selectedTask");
 			},
-			taskTitleChanged: function (task) {
+			taskTitleChanged: function(task) {
 				var findString = "[data-taskId='" + task.id + "']";
 				var $item = this.$el.find(findString);
 				$item[0].children[0].textContent = task.get("title");

@@ -12,18 +12,18 @@ var taskHierarchyViewTest = (function() {
 	var output = {};
 	output.getHierarchyCollection = function (tasksType) {
 		var tasks = new tasksType();
-		var firstGrandchild = new tasks.model(
+		this.firstGrandchild = new tasks.model(
 			{
 				Id: 3,
 				title: 'firstGrandchild',
 				children: []
 			});
-		tasks.add(tasks);
+		tasks.add(this.firstGrandchild);
 		var firstChild = new tasks.model(
 			{
 				Id: 2,
 				title: 'firstChild',
-				children: [firstGrandchild.get("Id")]
+				children: [this.firstGrandchild.get("Id")]
 			});
 		tasks.add(firstChild);
 		output.root = new tasks.model(
@@ -88,6 +88,20 @@ amdTest("getSelectedTask | view Contains Selected Task | selected Task Returned"
 	}
 );
 
+amdTest("constructor | 1 task fails default filter | failing task filtered out",
+	1,
+	["app/taskHierarchy/taskHierarchyView", 'app/collections/tasks'],
+	function (viewType, tasksType) {
+		var tasks = taskHierarchyViewTest.getHierarchyCollection(tasksType);
+		// status = 'Complete' fails default filter
+		taskHierarchyViewTest.firstGrandchild.set("status", 'Complete');
+		var failingId = taskHierarchyViewTest.firstGrandchild.id;
+		viewType.prototype.rootCollection = tasks;
+		var view = new viewType({ model: tasks.get(AppConstants.RootId) });
+		view.render();
+		equal(view.$el.find('[data-taskId="' + failingId + '"]').length, 0);
+	}
+);
 //test("selectedTask noSelectedTask nullReturned", function () {
 //	this.asyncShell(1, function (view, tasks) {
 //		var hierarchyView = this.generateTwoTierHierarchy();

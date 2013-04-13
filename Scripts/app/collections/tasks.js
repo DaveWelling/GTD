@@ -46,10 +46,10 @@ define(['underscore', 'backbone', 'app/eventSink', 'app/models/task', 'app/colle
 
 				parentTask.save();
 			},
-			getSubcollection: function (ids) {
+			getSubcollection: function (parentTask) {
 				var holdTasks = [];
 				var that = this;
-				_.each(ids, function (id) {
+				_.each(parentTask.get("children"), function (id) {
 					var task = that.get(id);
 					if (taskMatchesFilter(task, this.filter)) {
 						holdTasks.push(task);
@@ -59,7 +59,11 @@ define(['underscore', 'backbone', 'app/eventSink', 'app/models/task', 'app/colle
 			},
 			url: "http://molly/IntegrityGtdData/api/Taskapi",
 			//localStorage: new backbone.LocalStorage('integrity-tasks')
-			filter: {},
+			filter: {
+				status: ["Action Pending"],
+				when: ["Now", "Next", "Soon", "Later"],
+				where: ["Work"]
+			},
 
 		});
 		return tasks;
