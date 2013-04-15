@@ -11,20 +11,14 @@
 				// so that we can render the collection as children
 				// of this parent node
 				var task = this.model;
-				task.on("change:children", this.taskChildrenChanged, this);
+				//task.on("change:children", this.taskChildrenChanged, this);
 				task.on("change:title", this.taskTitleChanged, this);
 
 			},
-			taskChildrenChanged: function(eventArgs) {
-				var newTaskIds = _.difference(eventArgs.attributes.children, eventArgs._previousAttributes.children);
-				_.each(newTaskIds, function(newTaskId) {
-					var newTask = this.rootCollection.get(newTaskId);
-					this.collection.add(newTask);
-					this.render();
-				}, this);
-			},
 			onCompositeModelRendered: function() {
 				this.collection = this.rootCollection.getSubcollection(this.model);
+				this.collection.on("add", this.render, this);
+				this.collection.on("remove", this.render, this);
 			},
 			onRender: function() {
 				if (_.isUndefined(this.collection)) {

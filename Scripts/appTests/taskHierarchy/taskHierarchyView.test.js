@@ -61,6 +61,25 @@ amdTest({
 });
 
 
+amdTest({
+	testDescription: "task removed from parent | valid task and parentTask | child node removed from parent node",
+	numberExpectedAssertions: 1,
+	amdDependencies: ["app/taskHierarchy/taskHierarchyView", "app/collections/tasks"],
+	testFunction: function (viewType, tasksType) {
+		var tasks = new tasksType();
+		var parentTask = new tasks.model({ Id: 1, title: "test title", children: [2]});
+		var childTask = new tasks.model({ Id: 2, title: "test title" });
+		tasks.add(parentTask);
+		tasks.add(childTask);
+		viewType.prototype.rootCollection = tasks;
+		var view = new viewType({ model: parentTask });
+		view.render();
+		view.on("render", function () {
+			equal(view.$el.find('[data-taskId=2]').length, 0);
+		});
+		parentTask.set("children", []);
+	}
+});
 //test("taskAddedToParent validTaskAndParentTask newChildNodeAppendedToParentNode", function () {
 //	this.asyncShell(1, function (view, tasks) {
 //		var hierarchyView = this.generateTwoTierHierarchy();
