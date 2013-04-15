@@ -1,19 +1,16 @@
-﻿define(['backbone', 'underscore', 'app/eventSink', 'app/viewUtilities', 'marionette', 'app/taskHierarchy/transformToTreeView'],
-	function (backbone, _, sink, viewUtilities, marionette, transformToTreeView) {
+﻿define(['backbone', 'underscore', 'app/eventSink', 'app/viewUtilities', 'marionette', 'app/taskHierarchy/transformToTreeView', 'hbs!app/taskHierarchy/taskHierarchyTemplate'],
+	function (backbone, _, sink, viewUtilities, marionette, transformToTreeView, template) {
 		// The recursive tree view
 		var TreeView = Backbone.Marionette.CompositeView.extend({
-			template: "#node-template",
+			template: function(task) {
+				return template(task);
+			},
 			tagName: "li",
 			itemViewContainer: "ul",
 
 			initialize: function() {
-				// grab the child collection from the parent model
-				// so that we can render the collection as children
-				// of this parent node
 				var task = this.model;
-				//task.on("change:children", this.taskChildrenChanged, this);
 				task.on("change:title", this.taskTitleChanged, this);
-
 			},
 			onCompositeModelRendered: function() {
 				this.collection = this.rootCollection.getSubcollection(this.model);
