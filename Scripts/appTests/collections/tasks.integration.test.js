@@ -31,6 +31,6 @@ amdTest("sync | given valid task saved | returns task in new collection",
 				start();
 			}});
 		});
-		tasks.create({ Id: uniqueId, title: "sync | given valid task saved | returns task in new collection" });
+		tasks.create({ id: uniqueId, title: "sync | given valid task saved | returns task in new collection" });
 	}
 );

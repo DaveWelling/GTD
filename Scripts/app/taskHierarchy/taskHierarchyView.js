@@ -9,8 +9,10 @@
 			itemViewContainer: "ul",
 
 			initialize: function() {
-				var task = this.model;
-				task.on("change:title", this.taskTitleChanged, this);
+				if (typeof this.model != 'undefined') {
+					var task = this.model;
+					task.on("change:title", this.taskTitleChanged, this);
+				};
 			},
 			onCompositeModelRendered: function() {
 				this.collection = this.rootCollection.getSubcollection(this.model);
@@ -23,9 +25,9 @@
 				}
 				transformToTreeView(this.$el);
 				var plusButton = this.$el[0].children[0].children[1];
-				$(plusButton).on("click", this.addTaskToParentRequest);
+				$(plusButton).on("click", this.addNewTaskToParentRequest);
 			},
-			addTaskToParentRequest: function(args) {
+			addNewTaskToParentRequest: function(args) {
 				var parentNode = args.target.parentNode;
 				var parentTaskId = parentNode.getAttribute('data-taskId');
 				sink.trigger("task:addToParent", parentTaskId);

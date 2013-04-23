@@ -14,17 +14,17 @@ module("Tasks Collection Tests", {
 		this.parent456Task = {};
 		this.getTestTasks = function(tasksType) {
 			var tasks = new tasksType();
-			this.parent456Task = new tasks.model({ Id: 1, title: 't_1_1', description: 't_1_1 description', children: [4, 5, 6] });
-			tasks.add(new tasks.model({ Id: AppConstants.RootId, title: 'Tasks', description: 'Tasks', children: [1, 2, 3] }));
+			this.parent456Task = new tasks.model({ id: 1, title: 't_1_1', description: 't_1_1 description', children: [4, 5, 6] });
+			tasks.add(new tasks.model({ id: AppConstants.RootId, title: 'Tasks', description: 'Tasks', children: [1, 2, 3] }));
 			tasks.add(this.parent456Task);
-			tasks.add(new tasks.model({ Id: 2, title: 't_1_2', description: 't_1_2 description' }));
-			tasks.add(new tasks.model({ Id: 3, title: 't_1_3', description: 't_1_3 description' }));
-			tasks.add(new tasks.model({ Id: 4, title: 't_2_1', description: 't_2_1 description', children: [7, 8, 9] }));
-			tasks.add(new tasks.model({ Id: 5, title: 't_2_2', description: 't_2_2 description' }));
-			tasks.add(new tasks.model({ Id: 6, title: 't_2_3', description: 't_2_3 description' }));
-			tasks.add(new tasks.model({ Id: 7, title: 't_3_1', description: 't_3_1 description' }));
-			tasks.add(new tasks.model({ Id: 8, title: 't_3_2', description: 't_3_2 description' }));
-			tasks.add(new tasks.model({ Id: 9, title: 't_3_3', description: 't_3_3 description' }));
+			tasks.add(new tasks.model({ id: 2, title: 't_1_2', description: 't_1_2 description' }));
+			tasks.add(new tasks.model({ id: 3, title: 't_1_3', description: 't_1_3 description' }));
+			tasks.add(new tasks.model({ id: 4, title: 't_2_1', description: 't_2_1 description', children: [7, 8, 9] }));
+			tasks.add(new tasks.model({ id: 5, title: 't_2_2', description: 't_2_2 description' }));
+			tasks.add(new tasks.model({ id: 6, title: 't_2_3', description: 't_2_3 description' }));
+			tasks.add(new tasks.model({ id: 7, title: 't_3_1', description: 't_3_1 description' }));
+			tasks.add(new tasks.model({ id: 8, title: 't_3_2', description: 't_3_2 description' }));
+			tasks.add(new tasks.model({ id: 9, title: 't_3_3', description: 't_3_3 description' }));
 			return tasks;
 		};
 		this.ctxt = new CreateContext({});
@@ -187,7 +187,7 @@ amdTest("getSubCollection | filter 'when' == 'Now', 'where' == 'Work' | returns 
 		tasks.add(nonmatchingTask2);
 		tasks.add(parentTask);
 		
-		var ids = tasks.pluck("Id");
+		var ids = tasks.pluck("id");
 		var results = tasks.getSubcollection(parentTask);
 		var firstResult = results.first();
 		equal(firstResult.id, matchingTask.id);

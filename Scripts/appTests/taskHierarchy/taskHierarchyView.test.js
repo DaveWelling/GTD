@@ -14,23 +14,23 @@ var taskHierarchyViewTest = (function() {
 		var tasks = new tasksType();
 		this.firstGrandchild = new tasks.model(
 			{
-				Id: 3,
+				id: 3,
 				title: 'firstGrandchild',
 				children: []
 			});
 		tasks.add(this.firstGrandchild);
 		var firstChild = new tasks.model(
 			{
-				Id: 2,
+				id: 2,
 				title: 'firstChild',
-				children: [this.firstGrandchild.get("Id")]
+				children: [this.firstGrandchild.get("id")]
 			});
 		tasks.add(firstChild);
 		output.root = new tasks.model(
 			{
-				Id: AppConstants.RootId,
+				id: AppConstants.RootId,
 				title: 'root',
-				children: [firstChild.get("Id")]
+				children: [firstChild.get("id")]
 			});
 		tasks.add(output.root);
 		return tasks;
@@ -46,8 +46,8 @@ amdTest({
 	amdDependencies : ["app/taskHierarchy/taskHierarchyView", "app/collections/tasks"],
 	testFunction: function (viewType, tasksType) {
 		var tasks = new tasksType();
-		var parentTask = new tasks.model({ Id: 1, title: "test title" });
-		var childTask = new tasks.model({ Id: 2, title: "test title" });
+		var parentTask = new tasks.model({ id: 1, title: "test title" });
+		var childTask = new tasks.model({ id: 2, title: "test title" });
 		tasks.add(parentTask);
 		tasks.add(childTask);
 		viewType.prototype.rootCollection = tasks;
@@ -67,8 +67,8 @@ amdTest({
 	amdDependencies: ["app/taskHierarchy/taskHierarchyView", "app/collections/tasks"],
 	testFunction: function (viewType, tasksType) {
 		var tasks = new tasksType();
-		var parentTask = new tasks.model({ Id: 1, title: "test title", children: [2]});
-		var childTask = new tasks.model({ Id: 2, title: "test title" });
+		var parentTask = new tasks.model({ id: 1, title: "test title", children: [2] });
+		var childTask = new tasks.model({ id: 2, title: "test title" });
 		tasks.add(parentTask);
 		tasks.add(childTask);
 		viewType.prototype.rootCollection = tasks;
@@ -107,7 +107,7 @@ amdTest("getSelectedTask | view Contains Selected Task | selected Task Returned"
 	}
 );
 
-amdTest("constructor | 1 task fails default filter | failing task filtered out",
+amdTest("render | 1 task fails default filter | failing task filtered out of render",
 	1,
 	["app/taskHierarchy/taskHierarchyView", 'app/collections/tasks'],
 	function (viewType, tasksType) {
@@ -151,25 +151,46 @@ amdTest("constructor | 1 task fails default filter | failing task filtered out",
 //	});
 //});
 
+//amdTest({
+//	testDescription: "addNewTaskToParentRequest | raisedByRootChild | raises Task:AddToParent with root Id",
+//	numberExpectedAssertions: 1,
+//	amdDependencies: ["app/taskHierarchy/taskHierarchyView", "app/collections/tasks", 'app/eventSink'],
+//	testFunction: function(viewType, tasksType, sink) {
+//		stop();
+//		var tasks = taskHierarchyViewTest.getHierarchyCollection(tasksType);
+//		viewType.prototype.rootCollection = tasks;
+//		var view = new viewType({ model: taskHierarchyViewTest.root });
+//		view.render();
+//		var target = view.$el.find(".taskAdd").first()[0];
+//		var fakeEventArgs = {
+//			target: target
+//		};
+//		sink.on("task:addToParent", function (parentTaskId) {
+//			equal(parentTaskId, AppConstants.RootId);
+//			start();
+//		});
+//		view.addNewTaskToParentRequest(fakeEventArgs);
+//	}
+//});
+
 amdTest({
-	testDescription: "addTaskToParent | raisedByRootChild | raises Task:AddToParent with root Id",
+	testDescription: "addNewTaskToParentRequest | raisedByRootChild | raises Task:AddToParent with root Id",
 	numberExpectedAssertions: 1,
-	amdDependencies: ["app/taskHierarchy/taskHierarchyView", "app/collections/tasks", 'app/eventSink'],
-	testFunction: function(viewType, tasksType, sink) {
+	amdDependencies: ["app/taskHierarchy/taskHierarchyView", 'app/eventSink'],
+	testFunction: function (viewType, sink) {
 		stop();
-		var tasks = taskHierarchyViewTest.getHierarchyCollection(tasksType);
-		viewType.prototype.rootCollection = tasks;
-		var view = new viewType({ model: taskHierarchyViewTest.root });
-		view.render();
-		var target = view.$el.find(".taskAdd").first()[0];
+		var view = new viewType();
+		var parentNode = $("<div name='parent' data-taskId='" + AppConstants.RootId + "'></div>");
+		var childNode = $("<div name='child'></div>");
+		parentNode.append(childNode);
 		var fakeEventArgs = {
-			target: target
+			target: childNode[0]
 		};
 		sink.on("task:addToParent", function (parentTaskId) {
 			equal(parentTaskId, AppConstants.RootId);
 			start();
 		});
-		view.addTaskToParentRequest(fakeEventArgs);
+		view.addNewTaskToParentRequest(fakeEventArgs);
 	}
 });
 
