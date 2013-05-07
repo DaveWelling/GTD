@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Site", "Site\", "{F8666F9C-F666-4D16-B1D5-E78761B4BA4A}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		Debug.AspNetCompiler.VirtualPath = "/Site"
+		Debug.AspNetCompiler.PhysicalPath = "Site\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Site\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/Site"
+		Release.AspNetCompiler.PhysicalPath = "Site\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Site\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "20308"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{5796FDF4-F51A-481D-B9FF-D2B1C56F51C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Tests.Unit", "WebApi.unit.test\WebApi.Tests.Unit.csproj", "{1EDB5558-BA07-49C4-A946-476203946700}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8666F9C-F666-4D16-B1D5-E78761B4BA4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8666F9C-F666-4D16-B1D5-E78761B4BA4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8666F9C-F666-4D16-B1D5-E78761B4BA4A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8666F9C-F666-4D16-B1D5-E78761B4BA4A}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{5796FDF4-F51A-481D-B9FF-D2B1C56F51C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5796FDF4-F51A-481D-B9FF-D2B1C56F51C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5796FDF4-F51A-481D-B9FF-D2B1C56F51C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5796FDF4-F51A-481D-B9FF-D2B1C56F51C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EDB5558-BA07-49C4-A946-476203946700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EDB5558-BA07-49C4-A946-476203946700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EDB5558-BA07-49C4-A946-476203946700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EDB5558-BA07-49C4-A946-476203946700}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

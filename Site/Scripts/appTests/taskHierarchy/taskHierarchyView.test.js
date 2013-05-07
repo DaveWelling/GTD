@@ -80,6 +80,7 @@ amdTest({
 		parentTask.set("children", []);
 	}
 });
+
 //test("taskAddedToParent validTaskAndParentTask newChildNodeAppendedToParentNode", function () {
 //	this.asyncShell(1, function (view, tasks) {
 //		var hierarchyView = this.generateTwoTierHierarchy();

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>SSTID.Polymorphic</id>
+    <version>2.0.10.0</version>
+    <title>Polymorphic</title>
+    <authors>David Welling</authors>
+    <owners>SSTID</owners>
+    <projectUrl>http://www.sstid.com</projectUrl>
+    <iconUrl>http://www.sstid.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Framework to support dependency injection, event aggregation, exception handling and configuration</description>
+    <releaseNotes />
+    <copyright>Copyright 2012</copyright>
+    <tags>IOC Configuration Funq</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework3.5-CompactFramework">
+        <dependency id="log4net" version="1.2.11" />
+      </group>
+      <group targetFramework=".NETFramework3.5">
+        <dependency id="log4net" version="1.2.11" />
+      </group>
+    </dependencies>
+    <references>
+      <reference file="Polymorphic.dll" />
+    </references>
+  </metadata>
+</package>

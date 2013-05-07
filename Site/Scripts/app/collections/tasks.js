@@ -1,7 +1,9 @@
 ﻿/// <reference path="../../backbone.js"/>
 /// <reference path="../../jquery-1.8.2.min.js"/>
-define(['underscore', 'backbone', 'app/eventSink', 'app/models/task', 'app/collections/subTasks']
-	, function (_, backbone, sink, taskType, subTasksType) {
+/// <reference path="../constants.js"/>
+
+define(['underscore', 'backbone', 'app/eventSink', 'app/models/task', 'app/collections/subTasks','syncMethod']
+	, function (_, backbone, sink, taskType, subTasksType, syncMethod) {
 		var taskMatchesFilter = function(task, filter) {
 			for (var propertyName in filter) {
 				if (filter.hasOwnProperty(propertyName)) {
@@ -49,38 +51,7 @@ define(['underscore', 'backbone', 'app/eventSink', 'app/models/task', 'app/colle
 			getSubcollection: function (parentTask) {
 				return new subTasksType([], {parentTask: parentTask, filter: this.filter});
 			},
-			//sync: function (method, model, options) {
-				
-			//	options || (options = {});
-
-			//	switch (method) {
-			//		case 'create':
-			//			// POST /Task/create
-			//			options.url = "/Task/create";
-			//			break;
-			//		case 'update':
-			//			// POST /Task/{1}/update
-			//			options.url = "/Task/" + model.id + "/update";
-			//			break;
-			//		case 'delete':
-			//			// POST /Task/{1}/delete
-			//			options.url = "/Task/" + model.id + "/create";
-			//			break;
-			//		case 'read':
-			//			if ((!model.hasOwnProperty("models")) && model.attributes[model.idAttribute]) {
-			//				// GET /Task/{1}
-			//				options.url = "/Task/" + model.id;
-			//			} else {
-			//				// GET /Task
-			//				options.url = "/Task";
-			//			}
-			//			break;
-			//		default:
-			//			throw new Error(method + " is unsupported.");
-			//	};
-			//	backbone.sync(method, model, options);
-			//},
-			url: "http://molly/IntegrityGtdData/api/Taskapi",
+			sync: syncMethod,
 			//localStorage: new backbone.LocalStorage('integrity-tasks')
 			filter: {
 				status: ["Action Pending"],

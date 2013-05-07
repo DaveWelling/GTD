@@ -9,7 +9,8 @@
 		backbone: 'backbone',
 		marionette: 'backbone.marionette.min',
 		bootstrap: 'bootstrap/js/bootstrap.min',
-		tinyMCE: 'tinyMce/tiny_mce'
+		tinyMCE: 'tinyMce/tiny_mce',
+		syncMethod: 'app/defaultSync'
 	},
 	shim: {
 		//'backbone-localStorage': ['backbone'],

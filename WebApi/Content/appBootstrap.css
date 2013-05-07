@@ -1,0 +1,53 @@
+﻿body {
+}
+.taskDetails {
+	background-color: #eee
+}
+
+.plusimageapply{
+ list-style-image:url(../Images/plus.png);
+ cursor:pointer;
+ }
+.minusimageapply{
+ list-style-image:url(../Images/minus.png);
+ cursor:pointer;
+ }
+
+.selectedimage{
+	list-style-type:  none;
+	cursor:pointer;
+ }
+
+
+.taskTitle { 
+	font-size: 14pt;
+}
+.taskAdd {
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	display:inline-block;
+}
+
+.taskAdd	{
+	background: url("../Images/Add.png");
+}
+
+.taskAdd:hover {
+	background: url("../Images/Add.png") 0 -20px no-repeat;
+}
+
+#hierarchy {
+	padding-top: 20px;
+}
+
+#hierarchy li {
+	padding: 5px;
+}
+
+#hierarchy > li > span > a {
+	font-size: 20pt;
+	font-weight:bold;
+	color:black;
+	text-rendering:optimizeLegibility;
+}

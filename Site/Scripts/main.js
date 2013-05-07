@@ -25,11 +25,11 @@ require(['jquery'
 
 	var tasks = new tasksType();
 	tasks.fetch({
-		success: function() {
+		success: function(collection, response, options) {
 
 			var rootTask = tasks.get(AppConstants.RootId);
 			if (typeof rootTask === 'undefined') {
-				rootTask = tasks.create({ Id: AppConstants.RootId, title: 'Tasks', description: 'Tasks', children: [] });
+				rootTask = tasks.create({ id: AppConstants.RootId, title: 'Tasks', description: 'Tasks', children: [] });
 			}
 
 			var taskHierarchyController = new taskHierarchyControllerType(rootTask);
@@ -43,6 +43,9 @@ require(['jquery'
 
 			var workspace = new router();
 			Backbone.history.start();
+		},
+		error: function(collection, response, options) {
+			console.log("main.tasks.fetch failed");
 		}
 	});
 });

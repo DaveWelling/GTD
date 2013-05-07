@@ -1,0 +1,54 @@
+﻿<div id="filterGroup" class="hideHeading" data-role="collapsible-set">
+	<div data-role="collapsible">
+		<h3>State</h3>
+		<div data-role="fieldcontain">
+			<fieldset id="checkState" data-role="controlgroup" data-type="vertical">
+				<legend></legend>
+				<input type="checkbox" value="Action Pending" name="checkActionPending" id="checkActionPending" checked="checked" />
+				<label for="checkActionPending">Action Pending</label>
+				<input type="checkbox" value="Complete" name="checkComplete" id="checkComplete" />
+				<label for="checkComplete">Complete</label>
+				<input type="checkbox" value="Archived" name="checkArchived" id="checkArchived" />
+				<label for="checkArchived">Archived</label>
+			</fieldset>
+		</div>
+	</div>
+	<div data-role="collapsible" data-collapsed="false">
+		<h3>When</h3>
+		<div data-role="fieldcontain">
+			<fieldset id="checkWhen" data-role="controlgroup" data-type="vertical">
+				<legend></legend>
+				<input type="checkbox" value="Now" name="checkNow" checked="checked" id="checkNow" />
+				<label for="checkNow">Now</label>
+				<input type="checkbox" value="Next" name="checkNext" checked="checked" id="checkNext" />
+				<label for="checkNext">Next</label>
+				<input type="checkbox" value="Soon" name="checkSoon" checked="checked" id="checkSoon" />
+				<label for="checkSoon">Soon</label>
+				<input type="checkbox" value="Later" name="checkLater" checked="checked" id="checkLater" />
+				<label for="checkLater">Later</label>
+				<input type="checkbox" value="Someday" name="checkSomeday" id="checkSomeday" />
+				<label for="checkSomeday">Someday</label>
+				<input type="checkbox" value="Waiting" name="checkWaiting" id="checkWaiting" />
+				<label for="checkWaiting">Waiting</label>
+			</fieldset>
+		</div>
+	</div>
+	<div data-role="collapsible">
+		<h3>Where</h3>
+		<div data-role="fieldcontain">
+			<fieldset id="checkWhere" data-role="controlgroup" data-type="vertical">
+				<legend></legend>
+				<input type="checkbox" value="Work" name="checkWork" id="checkWork" checked="checked" />
+				<label for="checkWork">Work</label>
+				<input type="checkbox" value="Home" name="checkHome" id="checkHome" />
+				<label for="checkHome">Home</label>
+				<input type="checkbox" value="Car" name="checkCar" id="checkCar" />
+				<label for="checkCar">Car</label>
+			</fieldset>
+		</div>
+	</div>
+	<div style="float:right">
+		<a id="filtersApply" href="#hierarchyPage" data-role="button" data-theme="b">Submit</a>
+		<!--<input id="filtersApply" type="button" value="Apply" data-inline="true" data-theme="b" />-->
+	</div>
+</div>
