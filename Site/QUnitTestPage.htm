@@ -3,18 +3,19 @@
 <head>
 	<title>QUnit Test Page</title>
 	<link rel="stylesheet" href="Content/qunit.css" type="text/css" />
-
+    <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
+    <!--<script src="Scripts/gapiDriveClient.js" type="text/javascript"></script>-->
 	<script src="Scripts/appTests/qunit.js" type="text/javascript"></script>
-	<script src="Scripts/underscore.js"></script>
-	<script src="Scripts/app/constants.js"></script>
-	<script src="Scripts/requireConfig.js"></script>
-	<script src="Scripts/require.js"></script>
-	<script src="Scripts/appTests/sinon-1.4.2.js"></script>
-	<script src="Scripts/backbone.min.js"></script>
-	<!--<script src="Scripts/appTests/sinon-qunit-1.0.0.js"></script>-->
-	<script src="Scripts/appTests/createContext.js"></script>
-	<script src="Scripts/appTests/testUtilities.js"></script>
-	<script src="Scripts/appTests/amdQunit.js"></script>
+	<script src="Scripts/underscore.js" type="text/javascript"></script>
+	<script src="Scripts/app/constants.js" type="text/javascript"></script>
+	<script src="Scripts/requireConfig.js" type="text/javascript"></script>
+	<script src="Scripts/require.js" type="text/javascript"></script>
+	<script src="Scripts/appTests/sinon-1.4.2.js" type="text/javascript"></script>
+	<script src="Scripts/backbone.min.js" type="text/javascript"></script>
+	<!-- <script src="Scripts/appTests/sinon-qunit-1.0.0.js"></script>-->
+	<!-- <script src="Scripts/appTests/createContext.js"></script> -->
+	<script src="Scripts/appTests/testUtilities.js" type="text/javascript"></script>
+	<script src="Scripts/appTests/amdQunit.js" type="text/javascript"></script>
 	<!-- app Code -->
 	
 	
@@ -26,7 +27,8 @@
 		<ul></ul>
 	</script>
 
-	<!-- Unit test code goes here -->  
+    <!-- Unit test code goes here -->  
+    <script src="Scripts/appTests/googleSync/googleSync.test.js"></script>
 	<script src="Scripts/appTests/taskHierarchy/taskHierarchyController.test.js"></script>
 	<script src="Scripts/appTests/collections/tasks.test.js"></script>
 	<script src="Scripts/appTests/models/task.test.js"></script>

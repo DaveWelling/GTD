@@ -45,7 +45,10 @@ require(['jquery'
 			Backbone.history.start();
 		},
 		error: function(collection, response, options) {
+			console.log("**************************************************************")
 			console.log("main.tasks.fetch failed");
+			console.log(response.responseText);
+			console.log("**************************************************************")
 		}
 	});
 });

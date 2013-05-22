@@ -27,23 +27,7 @@ module("Tasks Collection Tests", {
 			tasks.add(new tasks.model({ id: 9, title: 't_3_3', description: 't_3_3 description' }));
 			return tasks;
 		};
-		this.ctxt = new CreateContext({});
-		this.asyncShell = function (numberAssertionsExpected, testFunction) {
-			expect(numberAssertionsExpected);
-			stop(2000);
-			this.ctxt(['app/collections/tasks', 'app/eventSink', 'app/models/task'], function (tasksType, sink, taskType) {
-				var tasks = new tasksType();
-				try {
-					testFunction = _.bind(testFunction, that);
-					testFunction(tasks, sink, taskType, tasksType);
-					tasks.destroy();
-				} catch (e) {
-					tasks.destroy();
-					throw e;
-				}
-				start();
-			});
-		};
+		
 	}
 });
 var tasksTest = (function() {
@@ -55,22 +39,28 @@ var tasksTest = (function() {
 	};
 	return outputModule;
 }());
-test("on task:addToParent event - where parent does not exist - exception", function () {
-	this.asyncShell(1, function(tasks, sink, taskType, tasksType) {
-		testUtilities.expectException(function() {
-			sink.trigger("task:addToParent", 'does not exist');
-		}, "No task for parent ID");
-	});
-});
+amdTest("on task:addToParent event - where parent does not exist - exception",
+    1,
+    ["app/collections/tasks", "app/eventSink"],
+    function (tasksType, sink) {
+        var tasks = new tasksType();
+        testUtilities.expectException(function () {
+            sink.trigger("task:addToParent", 'does not exist');
+        }, "No task for parent ID");
+    }
+);
 
-test("on destruction - removes event bindings", function () {
-	this.asyncShell(2, function (tasks, sink, taskType, tasksType) {
-		equal(tasks.length, 0);
-		tasks.destroy();
-		sink.trigger("task:addToParent", "root");
-		equal(tasks.length, 0);	
-	});
-});
+amdTest("on destruction - removes event bindings",
+    2,
+    ["app/collections/tasks", "app/eventSink"],
+    function (tasksType, sink) {
+        var tasks = new tasksType();
+        equal(tasks.length, 0);
+        tasks.destroy();
+        sink.trigger("task:addToParent", "root");
+        equal(tasks.length, 0);	
+    }
+);
 
 
 amdTest("getSubcollection | given valid ids | returns collection with tasks for ids",

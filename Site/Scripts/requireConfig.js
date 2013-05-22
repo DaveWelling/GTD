@@ -28,7 +28,7 @@
 		'jquery.mobile': ['jquery', 'jquery.mobile-config'],
 		hbs: {
 			exports: 'hbs',
-			deps: ['handlebars', 'hbs/underscore']
+			deps: ['handlebars', 'hbs/underscore', 'require']
 		},
 		marionette: {
 			deps: ['backbone','underscore', 'jquery']

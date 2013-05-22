@@ -12,13 +12,13 @@ namespace WebApi.Controllers
         private readonly TaskRepository _repository = new TaskRepository();
         
         // GET api/values
-        public IQueryable<Task> Get()
+        public IQueryable<TaskViewModel> Get()
         {
-            return _repository.GetAllTasks().AsQueryable();
+            return _repository.GetAllTasks().Select(t=>new TaskViewModel(t)).AsQueryable();
         }
 
         // GET api/values/5
-        public Task Get(Guid id)
+        public TaskViewModel Get(string id)
         {
             Task task = _repository.GetTask(id);
             if (task == null)
@@ -26,29 +26,29 @@ namespace WebApi.Controllers
                 // Returns a 404
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            return task;
+            return new TaskViewModel(task);
         }
 
         // POST api/values
-        public Task Post([FromBody]Task value)
+        public TaskViewModel Post([FromBody]TaskViewModel value)
         {
-           Task contact = _repository.AddTask(value);
-           return contact;
+           Task task = _repository.AddTask(value.ToTask());
+           return new TaskViewModel(task);
         }
 
         // PUT api/values/5
-        public void Put(Guid id, [FromBody]Task value)
+        public void Put(string id, [FromBody]TaskViewModel value)
         {
-            if (!_repository.UpdateTask(id, value))
+            if (!_repository.UpdateTask(id, value.ToTask()))
             {
                 // Returns a 404
                throw new HttpResponseException(HttpStatusCode.NotFound);
            }
         }
         // PUT api/values/5
-        public void Put([FromBody]Task value)
+        public void Put([FromBody]TaskViewModel value)
         {
-            if (!_repository.UpdateTask(value.id, value))
+            if (!_repository.UpdateTask(value.id, value.ToTask()))
             {
                 // Returns a 404
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -56,7 +56,7 @@ namespace WebApi.Controllers
         }
 
         // DELETE api/values/5
-        public void Delete(Guid id)
+        public void Delete(string id)
         {
            if (!_repository.RemoveTask(id))
            {

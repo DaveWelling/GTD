@@ -29,7 +29,7 @@ namespace WebApi.Repositories
             return _tasks.FindAll().ToList();
         }
 
-        public Task GetTask(Guid id)
+        public Task GetTask(string id)
         {
             IMongoQuery query = Query.EQ("_id", id);
             return _tasks.Find(query).FirstOrDefault();
@@ -37,19 +37,18 @@ namespace WebApi.Repositories
 
         public Task AddTask(Task item)
         {
-            item.lastPersisted = DateTime.Now;
             _tasks.Insert(item);
             return item;
         }
 
-        public bool RemoveTask(Guid id)
+        public bool RemoveTask(string id)
         {
             IMongoQuery query = Query.EQ("_id", id);
             SafeModeResult result = _tasks.Remove(query);
             return result.DocumentsAffected == 1;
         }
 
-        public bool UpdateTask(Guid id, Task task)
+        public bool UpdateTask(string id, Task task)
         {
             IMongoQuery query = Query.EQ("_id", id);
             IMongoUpdate update = Update
@@ -58,8 +57,8 @@ namespace WebApi.Repositories
                 .Set("status", Utility.Coalesce(task.status, ""))
                 .Set("when", Utility.Coalesce(task.when, ""))
                 .Set("where", Utility.Coalesce(task.where, ""))
-                .Set("lastPersisted", DateTime.Now)
-                .Set("children", new BsonArray(task.children));
+                .Set("lastPersisted", Utility.Coalesce(task.lastPersisted, ""))
+                .Set("children", task.children);
 
             SafeModeResult result = _tasks.Update(query, update);
             return result.UpdatedExisting;

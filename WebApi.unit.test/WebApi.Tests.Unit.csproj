@@ -52,8 +52,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TaskControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskControllerTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TaskViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebApi\WebApi.csproj">

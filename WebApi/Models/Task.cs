@@ -3,17 +3,18 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace WebApi.Models
 {
+    [BsonIgnoreExtraElements]
 	public class Task : IEquatable<Task>
 	{
-        [BsonId]
-		public Guid id { get; set; }
+        [BsonElement("_id")]
+		public string id { get; set; }
 		public string title { get; set; }
 		public string description { get; set; }
 		public string status { get; set; }
 		public string when { get; set; }
 		public string where { get; set; }
-		public Guid[] children { get; set; }
-        public DateTime lastPersisted { get; set; }
+		public string children { get; set; }
+        public string lastPersisted { get; set; }
 	    public bool Equals(Task other)
 	    {
 	        return other.id == id;

@@ -45,14 +45,15 @@ namespace WebApi.Tests.Unit
                 Guid taskId = Guid.NewGuid();
                 var task = new Task
                 {
-                    children = new Guid[] { },
+                    children = "[]",
                     description = string.Format("Child {0}", i),
-                    id = taskId,
+                    id = taskId.ToString(),
                     status = "Action Pending",
-                    title = string.Format("Child {0}", i)
+                    title = string.Format("Child {0}", i),
+                    lastPersisted = "2013-12-31 12:13:14 -0400"
                 };
 
-                _webApiController.Post(task);
+                _webApiController.Post(new TaskViewModel(task));
                 
             }
             var result = _webApiController.Get();
@@ -65,17 +66,18 @@ namespace WebApi.Tests.Unit
             Guid taskId = Guid.NewGuid();
             var task = new Task
             {
-                children = new Guid[] { },
+                children = "[]",
                 description = "1st Child",
-                id = taskId,
+                id = taskId.ToString(),
                 status = "Action Pending",
-                title = "Child 1"
+                title = "Child 1",
+                lastPersisted = "2013-12-31 12:13:14 -0400"
             };
 
-            _webApiController.Post(task);
+            _webApiController.Post(new TaskViewModel(task));
             var firstGet = _webApiController.Get(task.id);
-            Assert.AreEqual(task, firstGet);
-            _webApiController.Delete(taskId);
+            Assert.AreEqual(new TaskViewModel(task), firstGet);
+            _webApiController.Delete(taskId.ToString());
 
             try
             {
@@ -95,20 +97,21 @@ namespace WebApi.Tests.Unit
             Guid taskId = Guid.NewGuid();
             var task = new Task
             {
-                children = new Guid[] { },
+                children = "[]",
                 description = "1st Child",
-                id = taskId,
+                id = taskId.ToString(),
                 status = "Action Pending",
-                title = "Child 1"
+                title = "Child 1",
+                lastPersisted = "2013-12-31 12:13:14 -0400"
             };
 
-            _webApiController.Post(task);
+            _webApiController.Post(new TaskViewModel(task));
 
             task.status = expectedStatus;
 
-            _webApiController.Put(taskId, task);
+            _webApiController.Put(taskId.ToString(), new TaskViewModel(task));
 
-            var childResult = _webApiController.Get(taskId);
+            var childResult = _webApiController.Get(taskId.ToString());
 
             Assert.AreEqual(expectedStatus, childResult.status);
         }
@@ -120,28 +123,30 @@ namespace WebApi.Tests.Unit
             Guid childId = Guid.NewGuid();
             var rootExpected = new Task
                 {
-                    children = new Guid[] { childId },
+                    children = string.Format("['{0}']", childId ),
                     description = "Root",
-                    id = rootId,
+                    id = rootId.ToString(),
                     status = "Action Pending",
-                    title = "Root"
+                    title = "Root",
+                    lastPersisted = "2013-12-31 12:13:14 -0400"
                 };
             var childExpected = new Task
                 {
-                    children = new Guid[] { },
+                    children = "[]",
                     description = "1st Child",
-                    id = childId,
+                    id = childId.ToString(),
                     status = "Action Pending",
-                    title = "Child 1"
+                    title = "Child 1",
+                    lastPersisted = "2013-12-31 12:13:14 -0400"
                 };
 
-            _webApiController.Post(rootExpected);
-            _webApiController.Post(childExpected);
-            var rootResult = _webApiController.Get(rootId);
-            var childResult = _webApiController.Get(childId);
+            _webApiController.Post(new TaskViewModel(rootExpected));
+            _webApiController.Post(new TaskViewModel(childExpected));
+            var rootResult = _webApiController.Get(rootId.ToString());
+            var childResult = _webApiController.Get(childId.ToString());
 
-            Assert.AreEqual(rootExpected, rootResult);
-            Assert.AreEqual(childExpected, childResult);
+            Assert.AreEqual(new TaskViewModel(rootExpected), rootResult);
+            Assert.AreEqual(new TaskViewModel(childExpected), childResult);
         }
 
 
