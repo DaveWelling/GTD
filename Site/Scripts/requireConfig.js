@@ -10,7 +10,7 @@
 		marionette: 'backbone.marionette.min',
 		bootstrap: 'bootstrap/js/bootstrap.min',
 		tinyMCE: 'tinyMce/tiny_mce',
-		syncMethod: 'app/defaultSync'
+		syncMethod: 'app/googleSync/googleSync'
 	},
 	shim: {
 		//'backbone-localStorage': ['backbone'],

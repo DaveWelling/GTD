@@ -2,52 +2,61 @@
 /// <reference path="../../app/constants.js"/>
 /// <reference path="../../backbone.js"/>
 /// <reference path="../../gapiDriveClient.js"/>
+/// <reference path="../../jquery-1.8.2.js"/>
 
 // Change read -> get to read -> post
 define(['backbone'], function (backbone) {
-    var CLIENT_ID = '178349449538-uqbhjan88ghb4fni6i8ebr1870mns25a.apps.googleusercontent.com';
-    var SCOPES = 'https://www.googleapis.com/auth/drive';
-
-
-    /**
-     * Check if the current user has authorized the application.
-     */
-    function checkAuth() {
-        gapi.auth.authorize(
-            {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': true},
-            handleAuthResult);
-    }
-
-    /**
-     * Called when authorization server replies.
-     *
-     * @param {Object} authResult Authorization result.
-     */
-    function handleAuthResult(authResult) {
-        if (authResult){
-            if (authResult.error) {
-                throw new Error(authResult.error);
-            }
-            // passed.
-        } else {
-            gapi.auth.authorize(
-              { 'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false },
-              handleAuthResult);
-        }
-    }
-
+    
     /**
      * Start the file upload.
      *
      * @param {Object} evt Arguments from the file selector.
      */
     function uploadFile(evt) {
-        gapi.client.load('drive', 'v2', function() {
+        gapi.client.load('drive', 'v2', function () {
             var file = evt.target.files[0];
             insertFile(file);
         });
     }
+ 
 
+    function innerGetRoot() {
+        var url = "https://www.googleapis.com/drive/v2/files/" + AppConstants.RootId;
+        return $.getJSON(url);
+    };
+    
+    function createFolder() {
+
+        var access_token = googleAuth.getAccessToken();
+
+        var request = gapi.client.request({
+            'path': '/drive/v2/files/',
+            'method': 'POST',
+            'headers': {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token,
+            },
+            'body': {
+                "title": "Tasks",
+                "mimeType": "application/vnd.google-apps.folder",
+            }
+        });
+
+        request.execute(function (resp) {
+            console.log(resp);
+            document.getElementById("info").innerHTML = "Created folder: " + resp.title;
+        });
+    }
+    
+    function getRoot() {
+
+        // Make sure gapi loaded and authenticated before attempting get.
+        var chain1 = loadGapiClient();
+        var chain2 = chain1.then(checkAuth);
+        var chain3 = chain2.then(innerGetRoot);
+        var chain4 = chain3.then(null, createRoot);
+        return chain3;
+    }
     /**
      * Insert new file.
      *
@@ -55,13 +64,13 @@ define(['backbone'], function (backbone) {
      * @param {Function} callback Function to call when the request is complete.
      */
     function insertFile(fileData, callback) {
-      var boundary = '-------314159265358979323846';
-      var delimiter = "\r\n--" + boundary + "\r\n";
-      var closeDelim = "\r\n--" + boundary + "--";
+        var boundary = '-------314159265358979323846';
+        var delimiter = "\r\n--" + boundary + "\r\n";
+        var closeDelim = "\r\n--" + boundary + "--";
 
         var reader = new FileReader();
         reader.readAsBinaryString(fileData);
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             var contentType = fileData.type || 'application/octet-stream';
             var metadata = {
                 'title': fileData.name,
@@ -90,21 +99,20 @@ define(['backbone'], function (backbone) {
                 'body': multipartRequestBody
             });
             if (!callback) {
-                callback = function(file) {
+                callback = function (file) {
                     console.log(file);
                 };
             }
             request.execute(callback);
         };
     }
-    
+
     // Override for Backbone.sync
     return function (method, model, options) {
-        // Verify user is logged in.
-        checkAuth();
-        
         options || (options = {});
 
+        this.deleteRoot = deleteRoot;
+        this.getRoot = getRoot;
         //switch (method) {
         //    case 'create':
         //        // POST /Task/create
