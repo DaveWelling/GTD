@@ -4,16 +4,13 @@
 	<title>QUnit Test Page</title>
 	<link rel="stylesheet" href="Content/qunit.css" type="text/css" />
     <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
-    <!--<script src="Scripts/gapiDriveClient.js" type="text/javascript"></script>-->
 	<script src="Scripts/appTests/qunit.js" type="text/javascript"></script>
 	<script src="Scripts/underscore.js" type="text/javascript"></script>
 	<script src="Scripts/app/constants.js" type="text/javascript"></script>
+	<script src="Scripts/backbone.min.js" type="text/javascript"></script>
 	<script src="Scripts/requireConfig.js" type="text/javascript"></script>
 	<script src="Scripts/require.js" type="text/javascript"></script>
 	<script src="Scripts/appTests/sinon-1.4.2.js" type="text/javascript"></script>
-	<script src="Scripts/backbone.min.js" type="text/javascript"></script>
-	<!-- <script src="Scripts/appTests/sinon-qunit-1.0.0.js"></script>-->
-	<!-- <script src="Scripts/appTests/createContext.js"></script> -->
 	<script src="Scripts/appTests/testUtilities.js" type="text/javascript"></script>
 	<script src="Scripts/appTests/amdQunit.js" type="text/javascript"></script>
 	<!-- app Code -->
@@ -27,22 +24,41 @@
 		<ul></ul>
 	</script>
 
-    <!-- Unit test code goes here -->  
-	<!--<script src="Scripts/appTests/googleSync/googleSync.test.js"></script>-->
-	<script src="Scripts/appTests/googleSync/syncProperties.test.js"></script>
-	<!--<script src="Scripts/appTests/taskHierarchy/taskHierarchyController.test.js"></script>
-	<script src="Scripts/appTests/collections/tasks.test.js"></script>
-	<script src="Scripts/appTests/models/task.test.js"></script>
-	<script src="Scripts/appTests/eventSink.test.js"></script>
-	<script src="Scripts/appTests/taskHierarchy/taskHierarchyView.test.js"></script>
-	<script src="Scripts/appTests/viewUtilities.test.js"></script>
-	<script src="Scripts/appTests/taskDescriptions/taskDescriptionsController.test.js"></script>
-	<script src="Scripts/appTests/taskDescriptions/taskDescriptionsView.test.js"></script>
+	<!-- Unit test code goes here -->
+	
+	<!-- Infrastructure -->
+	<script src="Scripts/appTests/localDal.test.js"></script>
+	<!-- <script src="Scripts/appTests/eventSink.test.js"></script>
+
+	<!-- replication  
+	<script src="Scripts/appTests/googleSync/sync.integration.test.js"></script> -->
+	<script src="Scripts/appTests/replication.test.js"></script>
+	
+	<!-- Google drive integration -->
+	<!-- <script src="Scripts/appTests/googleSync/googleSync.test.js"></script>
+		<script src="Scripts/appTests/googleSync/propertiesDal.test.js"></script>
+		<script src="Scripts/appTests/googleSync/propertiesSync.test.js"></script> -->
+	
+	
+	<!-- Controllers 
+		<script src="Scripts/appTests/taskHierarchy/taskHierarchyController.test.js"></script>
+		<script src="Scripts/appTests/taskDescriptions/taskDescriptionsController.test.js"></script>
+		<script src="Scripts/appTests/taskFilters/taskFiltersController.test.js"></script>
+	
+		<!-- Model 
+			<script src="Scripts/appTests/collections/tasks.test.js"></script>
+			<script src="Scripts/appTests/models/task.test.js"></script>
+		-->
 	<script src="Scripts/appTests/collections/tasks.integration.test.js"></script>
-	<script src="Scripts/appTests/collections/subTasks.test.js"></script>
+	<!-- <script src="Scripts/appTests/collections/subTasks.test.js"></script>
+	
+	<!-- Views 
+	<script src="Scripts/appTests/viewUtilities.test.js"></script>
+	<script src="Scripts/appTests/taskHierarchy/taskHierarchyView.test.js"></script>
+	<script src="Scripts/appTests/taskDescriptions/taskDescriptionsView.test.js"></script>
 	<script src="Scripts/appTests/taskFilters/taskFiltersView.test.js"></script>
-	<script src="Scripts/appTests/taskFilters/taskFiltersController.test.js"></script>-->
 	<!--<script src="Scripts/appTests/taskHierarchy/taskHierarchyView.integration.test.js"></script>-->
+
 </head>
 <body>
 	<h1 id="qunit-header">Intertwyne QUnit Test</h1>

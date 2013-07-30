@@ -39,15 +39,21 @@ var tasksTest = (function() {
 	};
 	return outputModule;
 }());
-amdTest("on task:addToParent event - where parent does not exist - exception",
+
+amdTest("addToParent | where parent does not exist | exception",
     1,
-    ["app/collections/tasks", "app/eventSink"],
-    function (tasksType, sink) {
+    ["app/collections/tasks"],
+    function (tasksType) {
         var tasks = new tasksType();
         testUtilities.expectException(function () {
-            sink.trigger("task:addToParent", 'does not exist');
+            tasks.addToParent('does not exist');
         }, "No task for parent ID");
-    }
+    },
+	{
+		syncMethod: function () {
+			// Don't care about sync in this unit test.
+		}
+	}
 );
 
 amdTest("on destruction - removes event bindings",

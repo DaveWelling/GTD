@@ -107,42 +107,9 @@ define(['backbone'], function (backbone) {
         };
     }
 
-    // Override for Backbone.sync
-    return function (method, model, options) {
-        options || (options = {});
-
-        this.deleteRoot = deleteRoot;
-        this.getRoot = getRoot;
-        //switch (method) {
-        //    case 'create':
-        //        // POST /Task/create
-        //        options.url = AppConstants.GoogleApiUrl + "/Task/create";
-        //        options.emulateJSON = true;
-        //        break;
-        //    case 'update':
-        //        // POST /Task/{1}/update
-        //        //options.url = AppConstants.RhoModelUrl + "/Task/{" + model.id + "}/update";
-        //        options.url = AppConstants.GoogleApiUrl + "/Task/update";
-        //        options.emulateJSON = true;
-        //        //options.url = AppConstants.RhoModelUrl + "/Task/restUpdate/{" + model.id + "}";
-        //        break;
-        //    case 'delete':
-        //        // POST /Task/{1}/delete
-        //        options.url = AppConstants.GoogleApiUrl + "/Task/{" + model.id + "}/delete";
-        //        break;
-        //    case 'read':
-        //        if ((!model.hasOwnProperty("models")) && model.attributes[model.idAttribute]) {
-        //            // GET /Task/{1}
-        //            options.url = AppConstants.GoogleApiUrl + "/Task/{" + model.id + "}";
-        //        } else {
-        //            // GET /Task
-        //            options.url = AppConstants.GoogleApiUrl + "/Task/findTasks";
-        //        }
-        //        options.emulateJSON = true;
-        //        break;
-        //    default:
-        //        throw new Error(method + " is unsupported.");
-        //};
-        //backbone.sync(method, model, options);
-    };
+	return function() {
+		this.getTransactionsSinceLastSync = function(lastSyncTime) {
+			throw new Error("Not Implemented");
+		};
+	};
 });

@@ -1,8 +1,12 @@
 ﻿
 testUtilities = window.testUtilities || {};
-testUtilities.expectException = function (action, expectedMessageFragment) {
+testUtilities.expectException = function (action, expectedMessageFragment, context) {
 	try {
-		action();
+		if (typeof context != 'undefined') {
+			action.call(context);
+		} else {
+			action();
+		}
 		ok(false, "An exception with text ('" + expectedMessageFragment + "') was expected.");
 	}
 	catch (err) {
@@ -24,4 +28,19 @@ String.prototype.reduceWhiteSpace = function () {
 eitherEqual = function (expected1, expected2, expected3, actual, message) {
 	var pass = ((expected1 === actual) || (expected2 === actual)) || (expected3 == actual);
 	QUnit.push(pass, actual, expected1 + " OR " + expected2, message);
+};
+
+
+testUtilities.namespace = function (nsString) {
+	var parts = nsString.split('.'), parent = testUtilities, i; // strip redundant leading global 
+	if (parts[0] === "testUtilities") {
+		parts = parts.slice(1);
+	}
+	for (i = 0; i < parts.length; i += 1) { // create a property if it doesn't exist 
+		if (typeof parent[parts[i]] === "undefined") {
+			parent[parts[i]] = {};
+		}
+		parent = parent[parts[i]];
+	}
+	return parent;
 };

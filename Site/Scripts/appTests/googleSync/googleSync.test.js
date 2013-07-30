@@ -119,6 +119,7 @@ amdTest("insertRoot | root does not exist | gApiId assigned",
             });
         });
     });
+
 //amdTest("sync | given valid task saved | returns task in new collection",
 //	1,
 //	["app/collections/tasks", "app/utilities", "app/googleSync/googleSync", 'app/models/task'],

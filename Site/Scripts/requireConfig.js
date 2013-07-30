@@ -7,10 +7,13 @@
 		handlebars: 'Handlebars',
 		underscore: 'underscore',
 		backbone: 'backbone',
+		backboneLocalStorage: 'backbone-localStorage',
 		marionette: 'backbone.marionette.min',
 		bootstrap: 'bootstrap/js/bootstrap.min',
 		tinyMCE: 'tinyMce/tiny_mce',
-		syncMethod: 'app/googleSync/googleSync'
+		syncObject: 'app/localDal',
+		replicationDal: 'app/googleSync/googleSync',
+		localDal: 'app/localDal'
 	},
 	shim: {
 		//'backbone-localStorage': ['backbone'],
@@ -23,6 +26,10 @@
 		backbone: {
 			exports: 'Backbone',
 			deps: ['underscore']
+		},
+		backboneLocalStorage: {
+			deps: ['backbone'],
+			exports: 'Backbone'
 		},
 		'jquery.mobile-config': ['jquery'],
 		'jquery.mobile': ['jquery', 'jquery.mobile-config'],

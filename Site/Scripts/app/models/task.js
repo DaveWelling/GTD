@@ -1,9 +1,9 @@
 ﻿/// <reference path="../utilities.js"/>
 /// <reference path="../constants.js"/>
-define(['backbone', 'app/utilities', 'syncMethod'], function (backbone, appUtilities, syncMethod) {
+define(['backbone', 'app/utilities', 'syncObject'], function (backbone, appUtilities, syncObject) {
 	var task = backbone.Model.extend({
-		// Default attributes for the todo
-		// and ensure that each todo created has `title` and `completed` keys.
+		// Default attributes for the task
+		// and ensure that each task created has `title` and `completed` keys.
 		defaults: {
 			title: 'new task',
 			description: '',
@@ -21,7 +21,7 @@ define(['backbone', 'app/utilities', 'syncMethod'], function (backbone, appUtili
 				this.set("children", []);
 			}
 		},
-		sync: syncMethod,
+		sync: syncObject.sync,
 		//url: AppConstants.Url,
 		isNew: function() {
 		    return this.get("lastPersisted") == AppConstants.EndOfTime;

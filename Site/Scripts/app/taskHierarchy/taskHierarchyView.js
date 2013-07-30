@@ -8,11 +8,12 @@
 			tagName: "li",
 			itemViewContainer: "ul",
 
-			initialize: function() {
+			initialize: function(controller) {
 				if (typeof this.model != 'undefined') {
 					var task = this.model;
 					task.on("change:title", this.taskTitleChanged, this);
 				};
+				this.controller = controller;
 			},
 			onCompositeModelRendered: function() {
 				this.collection = this.rootCollection.getSubcollection(this.model);
@@ -30,7 +31,7 @@
 			addNewTaskToParentRequest: function(args) {
 				var parentNode = args.target.parentNode;
 				var parentTaskId = parentNode.getAttribute('data-taskId');
-				sink.trigger("task:addToParent", parentTaskId);
+				this.controller.addNewTaskToParent(parentTaskId);
 			},
 			getSelectedTaskElement: function() {
 				var foundTask;

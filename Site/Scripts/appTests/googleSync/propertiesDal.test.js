@@ -5,7 +5,7 @@
 /// <reference path="../../jquery-1.8.2.js"/>
 /// <reference path="../../app/Utilities.js"/>
 
-module("Google Sync Properties Tests", {
+module("Google File Properties DAL Tests", {
 	setup: function () {
 		this.createTaskStub = function(id) {
 			return {
@@ -29,17 +29,16 @@ module("Google Sync Properties Tests", {
 });
 
 
-
 amdTest("list | properties do not exist | returns undefined property item list",
     1,
-    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/syncProperties'],
-    function (createTask, utilities, syncProperties) {
+    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/propertiesDal'],
+    function (createTask, utilities, propertiesDal) {
     	stop(5000);
     	var taskId = utilities.CreateGuid();
     	var taskCreatePromise = this.getSavedTestTask(taskId, createTask);
-	    taskCreatePromise.done(function(gApiResponse) {
-	    	var properties = new syncProperties();
-	    	var promise = properties.list(gApiResponse.id);
+	    taskCreatePromise.done(function(gApiResponse, newTask) {
+	    	var properties = new propertiesDal();
+	    	var promise = properties.list(newTask);
 	    	promise.fail(function (response) {
 	    		equal(typeof response.code, 'undefined');
 	    		start();
@@ -53,14 +52,14 @@ amdTest("list | properties do not exist | returns undefined property item list",
 
 amdTest("insert | new property | returns property with key ",
     2,
-    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/syncProperties'],
-    function (createTask, utilities, syncProperties) {
+    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/propertiesDal'],
+    function (createTask, utilities, propertiesDal) {
     	stop(5000);
     	var taskId = utilities.CreateGuid();
     	var taskCreatePromise = this.getSavedTestTask(taskId, createTask);
-    	taskCreatePromise.done(function (gApiResponse) {
-    		var properties = new syncProperties();
-    		var promise = properties.insert(gApiResponse.id, "testKey", "testValue");
+    	taskCreatePromise.done(function (gApiResponse, newTask) {
+    		var properties = new propertiesDal();
+    		var promise = properties.insert(newTask, "testKey", "testValue");
     		promise.fail(function () {
     			ok(false, "Insert should not fail");
     			start();
@@ -75,20 +74,22 @@ amdTest("insert | new property | returns property with key ",
 
 amdTest("get | property exists | returns property with key ",
     2,
-    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/syncProperties'],
-    function (createTask, utilities, syncProperties) {
+    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/propertiesDal'],
+    function (createTask, utilities, propertiesDal) {
     	stop(5000);
     	var taskId = utilities.CreateGuid();
-    	var properties = new syncProperties();
-	    var fileId;
+    	var properties = new propertiesDal();
+    	var fileId;
+	    var holdNewTask;
     	var taskCreatePromise = this.getSavedTestTask(taskId, createTask);
     	var propertyInsertPromise = taskCreatePromise.then(
-    		function (insertResponse) {
+    		function (insertResponse, newTask) {
+    			holdNewTask = newTask;
     			fileId = insertResponse.id;
-    			return properties.insert(insertResponse.id, "testKey", "testValue")
+    			return properties.insert(newTask, "testKey", "testValue")
     		});
 	    propertyInsertPromise.done(function (gApiResponse) {
-    		var promise = properties.get(fileId, "testKey");
+	    	var promise = properties.get(holdNewTask, "testKey");
     		promise.fail(function () {
     			ok(false, "get should not fail");
     			start();
@@ -101,52 +102,53 @@ amdTest("get | property exists | returns property with key ",
     	});
     });
 
-
-
 amdTest("delete | property exists | returns empty body",
     1,
-    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/syncProperties'],
-    function (createTask, utilities, syncProperties) {
+    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/propertiesDal'],
+    function (createTask, utilities, propertiesDal) {
     	stop(5000);
     	var taskId = utilities.CreateGuid();
-    	var properties = new syncProperties();
+    	var properties = new propertiesDal();
     	var fileId;
+	    var holdNewTask;
     	var taskCreatePromise = this.getSavedTestTask(taskId, createTask);
     	var propertyInsertPromise = taskCreatePromise.then(
-    		function (insertResponse) {
+    		function (insertResponse, newTask) {
+    			holdNewTask = newTask;
     			fileId = insertResponse.id;
-    			return properties.insert(insertResponse.id, "testKey", "testValue")
+    			return properties.insert(newTask, "testKey", "testValue")
     		});
     	propertyInsertPromise.done(function (gApiResponse) {
-    		var promise = properties.delete(fileId, "testKey");
+    		var promise = properties.delete(holdNewTask, "testKey");
     		promise.fail(function () {
     			ok(false, "delete should not fail");
     			start();
     		});
-    		promise.done(function (gApiResponse) {
-    			ok($.isEmptyObject(gApiResponse.result));
+    		promise.done(function (deleteResponse) {
+    			ok($.isEmptyObject(deleteResponse.result));
     			start();
     		});
     	});
     });
 
-
 amdTest("update | property exists | updated property returned",
     2,
-    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/syncProperties'],
-    function (createTask, utilities, syncProperties) {
+    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/propertiesDal'],
+    function (createTask, utilities, propertiesDal) {
     	stop(5000);
     	var taskId = utilities.CreateGuid();
-    	var properties = new syncProperties();
+    	var properties = new propertiesDal();
     	var fileId;
+	    var holdNewTask;
     	var taskCreatePromise = this.getSavedTestTask(taskId, createTask);
     	var propertyInsertPromise = taskCreatePromise.then(
-    		function (insertResponse) {
+    		function (insertResponse, newTask) {
+    			holdNewTask = newTask;
     			fileId = insertResponse.id;
-    			return properties.insert(insertResponse.id, "testKey", "testValue")
+    			return properties.insert(holdNewTask, "testKey", "testValue")
     		});
     	propertyInsertPromise.done(function (gApiResponse) {
-    		var promise = properties.update(fileId, "testKey", 'updated value');
+    		var promise = properties.update(holdNewTask, "testKey", 'updated value');
     		promise.fail(function () {
     			ok(false, "update should not fail");
     			start();
@@ -161,20 +163,22 @@ amdTest("update | property exists | updated property returned",
 
 amdTest("list | property exists | property returned",
     2,
-    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/syncProperties'],
-    function (createTask, utilities, syncProperties) {
+    ['app/googleSync/createTask', 'app/utilities', 'app/googleSync/propertiesDal'],
+    function (createTask, utilities, propertiesDal) {
     	stop(5000);
     	var taskId = utilities.CreateGuid();
-    	var properties = new syncProperties();
+    	var properties = new propertiesDal();
     	var fileId;
+	    var holdNewTask;
     	var taskCreatePromise = this.getSavedTestTask(taskId, createTask);
     	var propertyInsertPromise = taskCreatePromise.then(
-    		function (insertResponse) {
+    		function (insertResponse, newTask) {
+    			holdNewTask = newTask;
     			fileId = insertResponse.id;
-    			return properties.insert(insertResponse.id, "testKey", "testValue")
+    			return properties.insert(holdNewTask, "testKey", "testValue")
     		});
     	propertyInsertPromise.done(function (gApiResponse) {
-    		var promise = properties.list(fileId);
+    		var promise = properties.list(holdNewTask);
     		promise.fail(function () {
     			ok(false, "list should not fail");
     			start();
@@ -186,38 +190,3 @@ amdTest("list | property exists | property returned",
     		});
     	});
     });
-
-amdTest("syncProperties | new property | new property added",	
-	1,
-	['app/googleSync/createTask', 'app/utilities', 'app/googleSync/syncProperties'],
-	function(createTask, utilities, syncProperties) {
-		stop(5000);
-		// Arrange
-		var expectedNewValue = "someNewValue";
-		var taskId = utilities.CreateGuid();
-		var properties = new syncProperties();
-		var fileId;
-		var taskCreateDeferred = this.getSavedTestTask(taskId, createTask);
-		
-		// Act
-		var syncDeferred = taskCreateDeferred.then(function(gApiResponse, task) {
-			fileId = gApiResponse.id;
-			task.attributes.someNewProperty = expectedNewValue;
-			return syncProperties(task);
-		});
-		
-		// Assert (get changed property)
-		var getDeferred = syncDeferred.then(function(syncResponse, syncedTask) {
-				return properties.get(fileId, "someNewProperty");
-		});
-		getDeferred.done(function (propertyResource) {
-			equal(propertyResource.value, expectedNewValue);
-			start();
-		});
-		getDeferred.fail(function(jsonResponse, rawResponse) {
-			ok(false, "failure: " + rawResponse);
-		});
-
-
-	}
-);

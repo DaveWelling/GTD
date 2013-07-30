@@ -19,9 +19,13 @@ var taskHierarchyControllerTests = (function () {
 			taskSelected: sinon.stub(),
 			rootCollection: this.tasks
 		};
+		this.tasks.addToParent = sinon.spy();
 	};
 	var that = this;
-	this.tasks = {get: function() {}};
+	this.tasks = {
+		get: function () { },
+		addToParent: sinon.spy()
+	};
 	_.extend(this.tasks, Backbone.Events);
 	this.reset();
 	this.stubs = {
@@ -65,12 +69,25 @@ amdTest("router:taskIdSelected | causes taskSelected to run",
 amdTest("tasks:FilterChange | | view.render called",
 	1,
 	["app/taskHierarchy/taskHierarchyController"],
-	function(controllerType) {
-		var controller = new controllerType({ collection: taskHierarchyControllerTests.tasks });
+	function (controllerType) {
+		var modelFake = { collection: taskHierarchyControllerTests.tasks };
+		var controller = new controllerType(modelFake);
 		controller.start();
 		taskHierarchyControllerTests.tasks.trigger("tasks:FilterChange");
 		// rendered in start and then in tasks:FilterChange handler
 		ok(taskHierarchyControllerTests.view.render.calledTwice);
+	},
+	taskHierarchyControllerTests.stubs
+);
+
+amdTest("addNewTaskToParent | given parent task id | tasks addToParent called with parent task id",
+	1,
+	["app/taskHierarchy/taskHierarchyController"],
+	function (controllerType) {
+		var controller = new controllerType({ collection: taskHierarchyControllerTests.tasks });
+		var expectedParentId = "fake";
+		controller.addNewTaskToParent(expectedParentId);
+		ok(taskHierarchyControllerTests.stubs["app/collections/tasks"]().addToParent.calledWith(expectedParentId));
 	},
 	taskHierarchyControllerTests.stubs
 );

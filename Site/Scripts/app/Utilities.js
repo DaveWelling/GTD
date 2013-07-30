@@ -5,4 +5,4 @@
 				return v.toString(16);
 			});
 		}
-	});
+});

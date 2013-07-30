@@ -2,8 +2,8 @@
 /// <reference path="../../jquery-1.8.2.min.js"/>
 /// <reference path="../constants.js"/>
 
-define(['underscore', 'backbone', 'app/eventSink', 'app/models/task', 'app/collections/subTasks','syncMethod']
-	, function (_, backbone, sink, taskType, subTasksType, syncMethod) {
+define(['underscore', 'backbone', 'app/eventSink', 'app/models/task', 'app/collections/subTasks', 'syncObject']
+	, function (_, backbone, sink, taskType, subTasksType, syncObject) {
 		var taskMatchesFilter = function(task, filter) {
 			for (var propertyName in filter) {
 				if (filter.hasOwnProperty(propertyName)) {
@@ -18,11 +18,9 @@ define(['underscore', 'backbone', 'app/eventSink', 'app/models/task', 'app/colle
 			// Reference to this collection's model.
 			model: taskType,
 			initialize: function (models) {
-				sink.on('task:addToParent', this.addToParent, this);
 				sink.on("taskFiltersController:FilterChange", this.handleFilterChange, this);
 			},
 			destroy: function () {
-				sink.off("task:addToParent", this.addToParent);
 				this.root = null;
 			},
 			handleFilterChange: function(newFilter) {
@@ -47,11 +45,12 @@ define(['underscore', 'backbone', 'app/eventSink', 'app/models/task', 'app/colle
 				parentTask.set("children", copy);
 
 				parentTask.save();
+				return newTask;
 			},
 			getSubcollection: function (parentTask) {
 				return new subTasksType([], {parentTask: parentTask, filter: this.filter});
 			},
-			sync: syncMethod,
+			sync: syncObject.sync,
 			//localStorage: new backbone.LocalStorage('integrity-tasks')
 			filter: {
 				status: ["Action Pending"],

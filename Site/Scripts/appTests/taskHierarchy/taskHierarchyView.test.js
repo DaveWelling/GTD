@@ -8,6 +8,7 @@
 /// <reference path="../../backbone.min.js"/>
 /// <reference path="../../app/constants.js"/>
 /// <reference path="../amdQunit.js"/>
+
 var taskHierarchyViewTest = (function() {
 	var output = {};
 	output.getHierarchyCollection = function (tasksType) {
@@ -175,23 +176,22 @@ amdTest("render | 1 task fails default filter | failing task filtered out of ren
 //});
 
 amdTest({
-	testDescription: "addNewTaskToParentRequest | raisedByRootChild | raises Task:AddToParent with root Id",
+	testDescription: "addNewTaskToParentRequest | controller available | calls controller addNewTaskToParent",
 	numberExpectedAssertions: 1,
-	amdDependencies: ["app/taskHierarchy/taskHierarchyView", 'app/eventSink'],
-	testFunction: function (viewType, sink) {
-		stop();
-		var view = new viewType();
+	amdDependencies: ["app/taskHierarchy/taskHierarchyView"],
+	testFunction: function (viewType) {
+		var controller = {
+			addNewTaskToParent: sinon.spy()
+		};
+		var view = new viewType(controller);
 		var parentNode = $("<div name='parent' data-taskId='" + AppConstants.RootId + "'></div>");
 		var childNode = $("<div name='child'></div>");
 		parentNode.append(childNode);
 		var fakeEventArgs = {
 			target: childNode[0]
 		};
-		sink.on("task:addToParent", function (parentTaskId) {
-			equal(parentTaskId, AppConstants.RootId);
-			start();
-		});
 		view.addNewTaskToParentRequest(fakeEventArgs);
+		ok(controller.addNewTaskToParent.calledWith(AppConstants.RootId));
 	}
 });
 

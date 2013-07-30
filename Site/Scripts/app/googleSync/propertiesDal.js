@@ -3,7 +3,8 @@
 /// <reference path="../../gapiDriveClient.js"/>
 /// <reference path="../../jquery-1.8.2.js"/>
 
-// TODO: Move DAL methods from here to a separate module
+// TODO: Convert local time to UTC before saving
+// TODO: Convert server time to local before passing to model
 define(["app/googleSync/loadAndAuthorize"], function (requestDeferred) {
 	// deferreds returned by asynchronous methods;
 	var listDeferred;
@@ -12,8 +13,22 @@ define(["app/googleSync/loadAndAuthorize"], function (requestDeferred) {
 	var insertDeferred;
 	var updateDeferred;
 
+	var getFileIdForTask = function(task) {
+		if ($.isEmptyObject(task.attributes)) {
+			throw new Error("No attributes defined for task");
+		}
+		if ($.isEmptyObject(task.attributes.alternateIds)) {
+			throw new Error("No alternateIds defined for task");
+		}
+		if ($.isEmptyObject(task.attributes.alternateIds.gApiId)) {
+			throw new Error("No google api id defined for task");
+		}
+		return task.attributes.alternateIds.gApiId;
+	};
+
 	// initiate asynchronous methods
-	var beginList = function (fileId) {
+	var beginList = function (task) {
+		fileId = getFileIdForTask(task);
 		listDeferred = $.Deferred();
 		var request = gapi.client.drive.properties.list({
 			'fileId': fileId
@@ -23,7 +38,8 @@ define(["app/googleSync/loadAndAuthorize"], function (requestDeferred) {
 		});
 		return listDeferred;
 	};
-	var beginGet = function(fileId, key) {
+	var beginGet = function (task, key) {
+		fileId = getFileIdForTask(task);
 		getDeferred = $.Deferred();
 		var request = gapi.client.drive.properties.get({
 			'fileId': fileId,
@@ -35,7 +51,8 @@ define(["app/googleSync/loadAndAuthorize"], function (requestDeferred) {
 		});
 		return getDeferred;
 	};
-	var beginDelete = function(fileId, key) {
+	var beginDelete = function (task, key) {
+		fileId = getFileIdForTask(task);
 		deleteDeferred = $.Deferred();
 		var request = gapi.client.drive.properties.delete({
 			'fileId': fileId,
@@ -47,7 +64,8 @@ define(["app/googleSync/loadAndAuthorize"], function (requestDeferred) {
 		});
 		return deleteDeferred;
 	};
-	var beginInsert = function (fileId, key, value) {
+	var beginInsert = function (task, key, value) {
+		fileId = getFileIdForTask(task);
 		insertDeferred = $.Deferred();
 		var body = {
 			'key': key,
@@ -61,7 +79,8 @@ define(["app/googleSync/loadAndAuthorize"], function (requestDeferred) {
 		request.execute(endInsert);
 		return insertDeferred;
 	};
-	var beginUpdate = function(fileId, key, newValue) {
+	var beginUpdate = function (task, key, newValue) {
+		fileId = getFileIdForTask(task);
 		updateDeferred = $.Deferred();
 		var body = { 'value': newValue };
 		var request = gapi.client.drive.properties.patch({
@@ -145,10 +164,10 @@ define(["app/googleSync/loadAndAuthorize"], function (requestDeferred) {
 		var deletePropertiesDeferred = changedPropertiesDeferred.then(function(gApiResponse) {
 			var deletedProperties = determineDeletedProperties(currentList, task);
 			return saveDeletedProperties(deletedProperties);
-		})
+		});
 	};
 
-	return function syncProperties(task) {
+	return function propertiesDal(task) {
 		// create instance methods for testing
 		// just construct (i.e. "new up") this function to use these:
 		this.list = beginList;

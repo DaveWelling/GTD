@@ -23,7 +23,9 @@ define(['app/collections/tasks', 'app/taskHierarchy/taskHierarchyView', 'app/eve
 				var task = view.rootCollection.get(args);
 				view.taskSelected(task);
 			};
-
+			this.addNewTaskToParent = function(parentTaskId) {
+				return model.collection.addToParent(parentTaskId);
+			};
 		};
 		return controller;
 	});
